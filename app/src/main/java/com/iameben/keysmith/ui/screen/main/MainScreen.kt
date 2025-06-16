@@ -1,5 +1,6 @@
 package com.iameben.keysmith.ui.screen.main
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,6 +24,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,9 +63,12 @@ fun MainScreen(
 
             )
 
-            Icon(
-                Icons.Default.Menu,
-                contentDescription = "light mode icon"
+            Image(
+                painter = painterResource(R.drawable.ic_save),
+                contentDescription = "Saved Passwords",
+                modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+
             )
         }
 
@@ -73,9 +81,12 @@ fun MainScreen(
                 text = "rgqq341Fgg@^"
             )
 
-            Icon(
-                Icons.Default.Menu,
-                contentDescription = "light mode icon"
+            Image(
+                painter = painterResource(R.drawable.ic_copy_light),
+                contentDescription = "Copy",
+                modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+
             )
 
         }
