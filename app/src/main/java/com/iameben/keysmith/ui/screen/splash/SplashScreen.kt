@@ -1,6 +1,5 @@
 package com.iameben.keysmith.ui.screen.splash
 
-import android.window.SplashScreen
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image

@@ -1,6 +1,5 @@
 package com.iameben.keysmith.navigation
 
-import android.window.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
