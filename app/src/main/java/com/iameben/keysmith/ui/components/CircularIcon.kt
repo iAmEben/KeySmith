@@ -21,9 +21,7 @@ import androidx.compose.ui.unit.dp
 fun CircularIcon(
     resourceId: Int,
     contentDescription: String,
-    modifier: Modifier = Modifier,
-    imageSize: Dp = 24.dp, // Fixed size for the image
-    padding: Dp = 4.dp,
+    modifier: Modifier = Modifier
 ) {
 
 
