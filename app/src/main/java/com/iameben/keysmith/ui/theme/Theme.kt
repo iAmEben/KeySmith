@@ -3,9 +3,11 @@ package com.iameben.keysmith.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.TextStyle
 
 private val DarkColorScheme = darkColorScheme(
     primary = DarkMocha,
@@ -29,10 +31,19 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = PureWhite,
     onSecondary = DeepBrown,
     onTertiary = LightApricotBeige,
-    onBackground = DeepCocoaBrown,
+    onBackground = DarkGray,
     onSurface = DeepCocoaBrown,
 
 )
+
+private val CustomDarkTextStyle = TextStyle(
+    color = WarmSandTan
+)
+
+private val CustomTextStyle = TextStyle(
+    color = DarkGray
+)
+
 
 @Composable
 fun KeySmithTheme(
@@ -51,9 +62,13 @@ fun KeySmithTheme(
         else -> LightColorScheme
     }
 
+    val textStyle = if (darkTheme) CustomDarkTextStyle else CustomTextStyle
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = {
+            ProvideTextStyle(textStyle, content = content)
+        }
     )
 }
