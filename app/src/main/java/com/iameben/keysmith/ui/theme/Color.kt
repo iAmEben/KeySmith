@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 val Beige = Color(0xFFFFEEDC)
 val DarkBrown = Color(0xFF4A2C1D)
 val MediumBrown = Color(0xFF6E4B3A)
+val DarkGray = Color(0xFF1C2526)
 val GoldenBrown = Color(0xFFD8A157)
 val DeepBrown = Color(0xFF52341C)
 val WarmBrown = Color(0xFFC76C3D)
