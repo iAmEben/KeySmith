@@ -20,6 +20,7 @@ private val DarkColorScheme = darkColorScheme(
     onTertiary = SoftAmber,
     onBackground = WarmSandTan,
     onSurface = WarmSandTan,
+    onSurfaceVariant = WarmSandTan.copy(alpha = 0.37f)
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -33,6 +34,7 @@ private val LightColorScheme = lightColorScheme(
     onTertiary = LightApricotBeige,
     onBackground = DarkGray,
     onSurface = DeepCocoaBrown,
+    onSurfaceVariant = DeepCocoaBrown.copy(alpha = 0.37f)
 
 )
 
