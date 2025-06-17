@@ -10,25 +10,27 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun RowStrokedRounded(
     modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
+    padding: Dp = 16.dp,
+    corner: Dp = 16.dp,
+    content: @Composable RowScope.() -> Unit,
     ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
-          .clip(RoundedCornerShape(8.dp))
+
           .border(
               width = 1.dp,
               color = MaterialTheme.colorScheme.onBackground,
-              shape = RoundedCornerShape(16.dp)
+              shape = RoundedCornerShape(corner)
           )
           .background(MaterialTheme.colorScheme.background)
-          .padding(16.dp),
+          .padding(padding),
         content = content
     )
 
