@@ -2,11 +2,9 @@ package com.iameben.keysmith.ui.screen.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,16 +16,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.R
 import com.iameben.keysmith.ui.components.CircularIcon
+import com.iameben.keysmith.ui.components.LabeledSwitch
 import com.iameben.keysmith.ui.components.RowStrokedRounded
 
 
@@ -37,6 +45,8 @@ fun MainScreen(
     modifier: Modifier = Modifier
 ) {
 
+    var sliderValue by remember { mutableFloatStateOf(12f) }
+    var smartModeEnabled by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier
@@ -68,10 +78,11 @@ fun MainScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Space(size = 34.dp)
         
         RowStrokedRounded(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+
         ) {
             Text(
                 text = "rgqq341Fgg@^"
@@ -87,14 +98,14 @@ fun MainScreen(
 
         }
 
-        Spacer(modifier = Modifier.height(64.dp))
+        Space(size = 34.dp)
 
         Text(
             text = "Password Count:",
             fontSize = 20.sp
         )
 
-        Spacer(modifier = Modifier.size(8.dp))
+        Space()
 
         RowStrokedRounded(padding = 10.dp, corner = 10.dp) {
 
@@ -105,6 +116,30 @@ fun MainScreen(
             )
         }
 
+        Space()
+
+        Slider(
+            value = sliderValue,
+            onValueChange = { sliderValue = it },
+            valueRange = 4f..20f,
+            steps = 16,
+            colors = SliderDefaults.colors(
+                activeTrackColor = MaterialTheme.colorScheme.primary,
+                thumbColor = MaterialTheme.colorScheme.primary,
+                inactiveTrackColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+        )
+
+        Space()
+
+        LabeledSwitch(label = "Smart Mode", checked = false, onCheckedChange = { smartModeEnabled })
+        LabeledSwitch(label = "Random Mode", checked = false, onCheckedChange = { smartModeEnabled })
+        LabeledSwitch(label = "Uppercase", checked = false, onCheckedChange = { smartModeEnabled })
+        LabeledSwitch(label = "Lowercase", checked = false, onCheckedChange = { smartModeEnabled })
+        LabeledSwitch(label = "Special Characters", checked = false, onCheckedChange = { smartModeEnabled })
+        LabeledSwitch(label = "Numbers", checked = false, onCheckedChange = { smartModeEnabled })
 
     }
 
