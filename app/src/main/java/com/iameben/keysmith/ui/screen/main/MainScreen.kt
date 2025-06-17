@@ -1,5 +1,6 @@
 package com.iameben.keysmith.ui.screen.main
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -140,6 +143,25 @@ fun MainScreen(
         LabeledSwitch(label = "Lowercase", checked = false, onCheckedChange = { smartModeEnabled })
         LabeledSwitch(label = "Special Characters", checked = false, onCheckedChange = { smartModeEnabled })
         LabeledSwitch(label = "Numbers", checked = false, onCheckedChange = { smartModeEnabled })
+
+        Space(size = 24.dp)
+
+        Button(
+            shape = RoundedCornerShape(16.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            onClick = {
+
+            }
+        ) {
+            Text(
+                modifier = modifier
+                    .padding(8.dp),
+                text = "COPY",
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
 
     }
 
