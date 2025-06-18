@@ -1,8 +1,8 @@
 package com.iameben.keysmith.ui.screen.main
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,8 +28,8 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +39,14 @@ import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.R
 import com.iameben.keysmith.ui.components.CircularIcon
 import com.iameben.keysmith.ui.components.LabeledSwitch
+import com.iameben.keysmith.ui.components.PasswordIndicator
 import com.iameben.keysmith.ui.components.RowStrokedRounded
+import com.iameben.keysmith.ui.theme.DeepRed
+import com.iameben.keysmith.ui.theme.Gold
+import com.iameben.keysmith.ui.theme.Orange
+import com.iameben.keysmith.ui.theme.Red
+import com.iameben.keysmith.ui.theme.RusticOrange
+import com.iameben.keysmith.ui.theme.YellowBrown
 
 
 @Composable
@@ -66,11 +73,25 @@ fun MainScreen(
                 .height(30.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CircularIcon(
-                R.drawable.ic_dark_mode,
-                "dark mode icon",
+            if (isSystemInDarkTheme()) {
 
-            )
+                Image(
+                    painter = painterResource(R.drawable.ic_light_mode),
+                    contentDescription = "Light mode",
+                    modifier.size(24.dp),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+
+                )
+            }else {
+
+                CircularIcon(
+                    R.drawable.ic_dark_mode,
+                    "dark mode"
+                )
+
+            }
+
+
 
             Image(
                 painter = painterResource(R.drawable.ic_save),
@@ -91,15 +112,54 @@ fun MainScreen(
                 text = "rgqq341Fgg@^"
             )
 
-            Image(
-                painter = painterResource(R.drawable.ic_copy_light),
-                contentDescription = "Copy",
-                modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+            if (isSystemInDarkTheme()) {
+
+                Image(
+                    painter = painterResource(R.drawable.ic_copy_dark),
+                    contentDescription = "Copy",
+                    modifier.size(24.dp),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+
+                )
+
+            } else {
+
+                Image(
+                    painter = painterResource(R.drawable.ic_copy_light),
+                    contentDescription = "Copy",
+                    modifier.size(24.dp),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+
+                )
+            }
+
+
+        }
+
+        Space()
+
+        if (isSystemInDarkTheme()){
+
+            PasswordIndicator(
+                dotSize = 16.dp,
+                dotColor1 = DeepRed,
+                dotColor2 = RusticOrange,
+                dotColor3 = Gold
+
+            )
+
+        } else {
+
+            PasswordIndicator(
+                dotSize = 16.dp,
+                dotColor1 = Red,
+                dotColor2 = Orange,
+                dotColor3 = YellowBrown
 
             )
 
         }
+
 
         Space(size = 34.dp)
 
@@ -159,7 +219,8 @@ fun MainScreen(
                 modifier = modifier
                     .padding(8.dp),
                 text = "COPY",
-                color = MaterialTheme.colorScheme.onPrimary
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onPrimary,
             )
         }
 
