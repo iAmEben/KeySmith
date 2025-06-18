@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Space(
-    size: Dp = 8.dp,
+    size: Dp = 16.dp,
     height: Dp = 0.dp,
     width: Dp = 0.dp
 ) {
