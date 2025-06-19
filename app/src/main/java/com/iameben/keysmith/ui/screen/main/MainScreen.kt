@@ -2,6 +2,7 @@ package com.iameben.keysmith.ui.screen.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,18 +24,19 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.R
 import com.iameben.keysmith.ui.components.CircularIcon
@@ -52,11 +54,13 @@ import com.iameben.keysmith.ui.theme.YellowBrown
 @Composable
 @Preview
 fun MainScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    themeViewmodel: ThemeViewmodel = hiltViewModel()
 ) {
 
     var sliderValue by remember { mutableFloatStateOf(12f) }
     var smartModeEnabled by remember { mutableStateOf(true) }
+    val isDarkTheme by themeViewmodel.isDarkTheme.collectAsState()
 
     Column(
         modifier = modifier
@@ -78,15 +82,19 @@ fun MainScreen(
                 Image(
                     painter = painterResource(R.drawable.ic_light_mode),
                     contentDescription = "Light mode",
-                    modifier.size(24.dp),
+                    modifier.size(24.dp)
+                        .clickable { themeViewmodel.toggleTheme() },
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+
 
                 )
             }else {
 
                 CircularIcon(
                     R.drawable.ic_dark_mode,
-                    "dark mode"
+                    "dark mode",
+                    modifier = modifier
+                        .clickable { themeViewmodel.toggleTheme() }
                 )
 
             }
