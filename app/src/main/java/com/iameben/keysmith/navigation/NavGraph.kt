@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.iameben.keysmith.ui.screen.main.MainScreen
+import com.iameben.keysmith.ui.screen.main.ThemeViewmodel
 import com.iameben.keysmith.ui.screen.splash.SplashScreen
 import com.iameben.keysmith.ui.screen.splash.SplashViewmodel
 
@@ -15,7 +16,8 @@ import com.iameben.keysmith.ui.screen.splash.SplashViewmodel
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    themeViewmodel : ThemeViewmodel
 ) {
     NavHost(
         navController = navController,
@@ -36,7 +38,10 @@ fun NavGraph(
 
         }
         composable("main") {
-            MainScreen()
+
+            MainScreen(
+                themeViewmodel = themeViewmodel
+            )
         }
     }
 }
