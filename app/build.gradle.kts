@@ -61,6 +61,9 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
+    implementation(libs.kotlin.coroutines)
+    implementation (libs.kotlin.android)
+
 
 
     //Navigation & Animation
