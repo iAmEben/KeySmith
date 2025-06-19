@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.iameben.keysmith.R
+import com.iameben.keysmith.ui.theme.Beige
 
 @Composable
 fun SplashScreen(
@@ -36,11 +37,11 @@ fun SplashScreen(
     Box (
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(Beige),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_icon),
+            painter = painterResource(id = R.drawable.ic_app_logo),
             contentDescription = "App Logo",
             modifier = Modifier
                 .size(120.dp)
