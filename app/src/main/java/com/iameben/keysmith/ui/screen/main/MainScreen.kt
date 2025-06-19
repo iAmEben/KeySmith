@@ -1,10 +1,12 @@
 package com.iameben.keysmith.ui.screen.main
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,10 +17,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -30,8 +37,11 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +55,7 @@ import com.iameben.keysmith.ui.components.PasswordIndicator
 import com.iameben.keysmith.ui.components.RowStrokedRounded
 import com.iameben.keysmith.ui.theme.DeepRed
 import com.iameben.keysmith.ui.theme.Gold
+import com.iameben.keysmith.ui.theme.KeySmithTheme
 import com.iameben.keysmith.ui.theme.Orange
 import com.iameben.keysmith.ui.theme.Red
 import com.iameben.keysmith.ui.theme.RusticOrange
@@ -61,6 +72,10 @@ fun MainScreen(
     var sliderValue by remember { mutableFloatStateOf(12f) }
     var smartModeEnabled by remember { mutableStateOf(true) }
     val isDarkTheme by themeViewmodel.isDarkTheme.collectAsState()
+    val themeIconId = if (isDarkTheme) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
+    val copyIconId = if (isDarkTheme) R.drawable.ic_copy_dark else R.drawable.ic_copy_light
+    val rotationAngle by animateFloatAsState(targetValue = if (isDarkTheme) 180f else 0f)
+
 
     Column(
         modifier = modifier
@@ -77,41 +92,47 @@ fun MainScreen(
                 .height(30.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (isSystemInDarkTheme()) {
-
-                Image(
-                    painter = painterResource(R.drawable.ic_light_mode),
-                    contentDescription = "Light mode",
-                    modifier.size(24.dp)
-                        .clickable { themeViewmodel.toggleTheme() },
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
 
 
-                )
-            }else {
 
-                CircularIcon(
-                    R.drawable.ic_dark_mode,
-                    "dark mode",
+            Box(modifier.fillMaxWidth()) {
+
+                IconButton(
+                    onClick = {themeViewmodel.toggleTheme()},
                     modifier = modifier
-                        .clickable { themeViewmodel.toggleTheme() }
-                )
+                        .wrapContentSize()
+                        .padding(top = 18.dp)
+                        .align(Alignment.CenterStart)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary)
 
+                ) {
+                    Icon(
+                        painter = painterResource(id = themeIconId),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier
+                            .size(18.dp)
+                            .graphicsLayer(rotationZ = rotationAngle)
+                    )
+                }
+
+
+                Icon(
+                    painter = painterResource(R.drawable.ic_save),
+                    contentDescription = "Saved Passwords",
+                    modifier
+                        .size(24.dp)
+                        .align(Alignment.CenterEnd),
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
             }
 
 
-
-            Image(
-                painter = painterResource(R.drawable.ic_save),
-                contentDescription = "Saved Passwords",
-                modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-
-            )
         }
 
         Space(size = 34.dp)
-        
+
         RowStrokedRounded(
             modifier = Modifier.fillMaxWidth(),
 
@@ -120,27 +141,14 @@ fun MainScreen(
                 text = "rgqq341Fgg@^"
             )
 
-            if (isSystemInDarkTheme()) {
+            Icon(
+                painter = painterResource(id = copyIconId),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+                    .size(24.dp)
 
-                Image(
-                    painter = painterResource(R.drawable.ic_copy_dark),
-                    contentDescription = "Copy",
-                    modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-
-                )
-
-            } else {
-
-                Image(
-                    painter = painterResource(R.drawable.ic_copy_light),
-                    contentDescription = "Copy",
-                    modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-
-                )
-            }
-
+            )
 
         }
 
@@ -188,6 +196,7 @@ fun MainScreen(
         }
 
         Space()
+
 
         Slider(
             value = sliderValue,
