@@ -256,3 +256,19 @@ fun MainScreen(
 
 }
 
+@SuppressLint("ViewModelConstructorInComposable")
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    val mockPreferences = AppPreferences(LocalContext.current)
+    val themeViewmodel = ThemeViewmodel()
+    val switchViewmodel = SwitchViewmodel(mockPreferences)
+
+    KeySmithTheme {
+        MainScreen(
+            modifier = Modifier.fillMaxSize(),
+            themeViewmodel = themeViewmodel,
+            switchViewmodel = switchViewmodel
+        )
+    }
+}
