@@ -65,11 +65,11 @@ import com.iameben.keysmith.ui.theme.YellowBrown
 fun MainScreen(
     modifier: Modifier = Modifier,
     themeViewmodel: ThemeViewmodel = hiltViewModel(),
-    switchViewmodel: SwitchViewmodel = hiltViewModel()
+    mainScreenViewmodel: MainScreenViewmodel = hiltViewModel()
 ) {
 
     var sliderValue by remember { mutableFloatStateOf(12f) }
-    val switchStates by switchViewmodel.switchStates.collectAsState()
+    val switchStates by mainScreenViewmodel.switchStates.collectAsState()
     val isDarkTheme by themeViewmodel.isDarkTheme.collectAsState()
     val themeIconId = if (isDarkTheme) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
     val copyIconId = if (isDarkTheme) R.drawable.ic_copy_dark else R.drawable.ic_copy_light
@@ -219,7 +219,7 @@ fun MainScreen(
                 label = type.name.replace("_", " ").lowercase(),
                 checked = isChecked,
                 onCheckedChange = {checked ->
-                    switchViewmodel.toggleSwitch(type, checked)
+                    mainScreenViewmodel.toggleSwitch(type, checked)
                 }
             )
         }
@@ -257,13 +257,13 @@ fun MainScreen(
 fun MainScreenPreview() {
     val mockPreferences = AppPreferences(LocalContext.current)
     val themeViewmodel = ThemeViewmodel()
-    val switchViewmodel = SwitchViewmodel(mockPreferences)
+    val mainScreenViewmodel = MainScreenViewmodel(mockPreferences)
 
     KeySmithTheme {
         MainScreen(
             modifier = Modifier.fillMaxSize(),
             themeViewmodel = themeViewmodel,
-            switchViewmodel = switchViewmodel
+            mainScreenViewmodel = mainScreenViewmodel
         )
     }
 }

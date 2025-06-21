@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SwitchViewmodel @Inject constructor(
+class MainScreenViewmodel @Inject constructor(
     private val preferences: AppPreferences
 ) : ViewModel() {
     private val _switchStates = MutableStateFlow(preferences.getAllSwitchStates())
