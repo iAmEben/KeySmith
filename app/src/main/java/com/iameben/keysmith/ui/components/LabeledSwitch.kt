@@ -26,18 +26,18 @@ fun LabeledSwitch(
 
     ){
         Text(
-            text = label,
+            text = label.replaceFirstChar { it.uppercase() },
             modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.onBackground
         )
 
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colorScheme.primary,
-                uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            onCheckedChange = onCheckedChange
+//            colors = SwitchDefaults.colors(
+//                checkedThumbColor = MaterialTheme.colorScheme.primary,
+//                uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
+//            )
         )
     }
 }
