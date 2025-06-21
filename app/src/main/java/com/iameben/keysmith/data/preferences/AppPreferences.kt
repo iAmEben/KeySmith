@@ -17,7 +17,7 @@ class AppPreferences @Inject constructor(@ApplicationContext context: Context) {
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    fun switchState(type: SwitchType, isChecked: Boolean) {
+    fun setSwitchState(type: SwitchType, isChecked: Boolean) {
         prefs.edit() { putBoolean(type.name, isChecked) }
     }
 
