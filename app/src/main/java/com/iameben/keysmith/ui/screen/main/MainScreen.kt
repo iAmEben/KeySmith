@@ -1,7 +1,6 @@
 package com.iameben.keysmith.ui.screen.main
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -28,14 +27,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,7 +41,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,7 +59,6 @@ import com.iameben.keysmith.ui.theme.Orange
 import com.iameben.keysmith.ui.theme.Red
 import com.iameben.keysmith.ui.theme.RusticOrange
 import com.iameben.keysmith.ui.theme.YellowBrown
-import java.util.prefs.Preferences
 
 
 @Composable
@@ -219,7 +214,7 @@ fun MainScreen(
         Space()
 
         SwitchType.entries.forEach { type ->
-            val isChecked by remember { derivedStateOf { switchStates[type] ?: false } }
+            val isChecked by remember { derivedStateOf { switchStates[type] == true } }
             LabeledSwitch(
                 label = type.name.replace("_", " ").lowercase(),
                 checked = isChecked,
