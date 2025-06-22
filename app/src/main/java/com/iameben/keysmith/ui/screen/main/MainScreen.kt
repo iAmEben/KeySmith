@@ -68,8 +68,9 @@ fun MainScreen(
     mainScreenViewmodel: MainScreenViewmodel = hiltViewModel()
 ) {
 
-    var sliderValue by remember { mutableFloatStateOf(12f) }
+
     val switchStates by mainScreenViewmodel.switchStates.collectAsState()
+    val sliderValue by mainScreenViewmodel.sliderValue.collectAsState()
     val isDarkTheme by themeViewmodel.isDarkTheme.collectAsState()
     val themeIconId = if (isDarkTheme) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
     val copyIconId = if (isDarkTheme) R.drawable.ic_copy_dark else R.drawable.ic_copy_light
@@ -188,7 +189,7 @@ fun MainScreen(
         RowStrokedRounded(padding = 10.dp, corner = 10.dp) {
 
             Text(
-                text = "9",
+                text = "$sliderValue",
                 modifier = modifier
                     .padding(start = 8.dp, end = 8.dp)
             )
@@ -198,9 +199,9 @@ fun MainScreen(
 
 
         Slider(
-            value = sliderValue,
-            onValueChange = { sliderValue = it },
-            valueRange = 4f..20f,
+            value = sliderValue.toFloat(),
+            onValueChange = { mainScreenViewmodel.setSliderValue(it.toInt()) },
+            valueRange = 4f..21f,
             steps = 16,
             colors = SliderDefaults.colors(
                 activeTrackColor = MaterialTheme.colorScheme.primary,
