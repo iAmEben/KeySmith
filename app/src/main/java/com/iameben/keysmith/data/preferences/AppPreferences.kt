@@ -13,6 +13,8 @@ class AppPreferences @Inject constructor(@ApplicationContext context: Context) {
 
     companion object {
         private const val PREFS_NAME = "app_prefs"
+        private const val KEY_SLIDER_VALUE = "slider_value"
+        private const val DEFAULT_SLIDER_VALUE = 9
     }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -25,6 +27,12 @@ class AppPreferences @Inject constructor(@ApplicationContext context: Context) {
 
     fun getAllSwitchStates(): Map<SwitchType, Boolean> =
         SwitchType.entries.associateWith { getSwitchState(it) }
+
+    fun setSliderValue(value: Int) {
+        prefs.edit() { putInt(KEY_SLIDER_VALUE, value) }
+    }
+
+    fun getSliderValue(): Int = prefs.getInt(KEY_SLIDER_VALUE, DEFAULT_SLIDER_VALUE)
 
     fun clear() {
         prefs.edit() { clear() }
