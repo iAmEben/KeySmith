@@ -15,8 +15,20 @@ class MainScreenViewmodel @Inject constructor(
     private val _switchStates = MutableStateFlow(preferences.getAllSwitchStates())
     val switchStates = _switchStates.asStateFlow()
 
+    private val _sliderValue = MutableStateFlow(preferences.getSliderValue())
+    val sliderValue = _sliderValue.asStateFlow()
+
     fun toggleSwitch(type: SwitchType, isChecked: Boolean) {
         _switchStates.value = _switchStates.value.toMutableMap().apply { this[type] = isChecked }
         preferences.setSwitchState(type, isChecked)
     }
+
+    fun isSwitchOn(type: SwitchType): Boolean = switchStates.value[type] == true
+
+    fun setSliderValue(value: Int) {
+        _sliderValue.value = value
+        preferences.setSliderValue(value)
+    }
+
+
 }
