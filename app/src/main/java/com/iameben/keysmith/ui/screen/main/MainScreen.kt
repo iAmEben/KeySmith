@@ -32,9 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,8 +47,10 @@ import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.R
 import com.iameben.keysmith.data.preferences.AppPreferences
 import com.iameben.keysmith.ui.components.LabeledSwitch
+import com.iameben.keysmith.ui.components.ModeButton
 import com.iameben.keysmith.ui.components.PasswordIndicator
 import com.iameben.keysmith.ui.components.RowStrokedRounded
+import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
 import com.iameben.keysmith.ui.theme.DeepRed
 import com.iameben.keysmith.ui.theme.Gold
@@ -71,6 +71,7 @@ fun MainScreen(
 
     val switchStates by mainScreenViewmodel.switchStates.collectAsState()
     val sliderValue by mainScreenViewmodel.sliderValue.collectAsState()
+    val selectMode by mainScreenViewmodel.selectMode.collectAsState()
     val isDarkTheme by themeViewmodel.isDarkTheme.collectAsState()
     val themeIconId = if (isDarkTheme) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
     val copyIconId = if (isDarkTheme) R.drawable.ic_copy_dark else R.drawable.ic_copy_light
@@ -211,6 +212,28 @@ fun MainScreen(
             modifier = Modifier
                 .padding(vertical = 16.dp)
         )
+
+        Space()
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            ModeButton(
+                text = "Random",
+                selected = selectMode == ModeSelector.RANDOM,
+                onClick = { mainScreenViewmodel.setSelectMode(ModeSelector.RANDOM)}
+            )
+
+            ModeButton(
+                text = "Smart",
+                selected = selectMode == ModeSelector.SMART,
+                onClick = { mainScreenViewmodel.setSelectMode(ModeSelector.SMART)}
+            )
+        }
 
         Space()
 
