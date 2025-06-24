@@ -217,7 +217,7 @@ fun MainScreen(
         )
 
         Space()
-        val modes = ModeSelector.values()
+        val modes = ModeSelector.entries.toTypedArray()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
