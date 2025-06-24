@@ -21,6 +21,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -214,26 +217,26 @@ fun MainScreen(
         )
 
         Space()
-
+        val modes = ModeSelector.values()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
-        ) {
-            ModeButton(
-                text = "Random",
-                selected = selectMode == ModeSelector.RANDOM,
-                onClick = { mainScreenViewmodel.setSelectMode(ModeSelector.RANDOM)}
-            )
-
-            ModeButton(
-                text = "Smart",
-                selected = selectMode == ModeSelector.SMART,
-                onClick = { mainScreenViewmodel.setSelectMode(ModeSelector.SMART)}
-            )
+        ){
+            modes.forEachIndexed { index, mode ->
+                ModeButton(
+                    text = mode.name,
+                    iconRes = if (mode == ModeSelector.RANDOM) R.drawable.ic_random else R.drawable.ic_smart,
+                    selected = selectMode == mode,
+                    onClick = { mainScreenViewmodel.setSelectMode(mode) },
+                    index = index,
+                    totalCount = modes.size
+                )
+            }
         }
+
 
         Space()
 
