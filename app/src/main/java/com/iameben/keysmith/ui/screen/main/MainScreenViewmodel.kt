@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.ViewModel
 import com.iameben.keysmith.data.preferences.AppPreferences
+import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -18,6 +19,9 @@ class MainScreenViewmodel @Inject constructor(
     private val _sliderValue = MutableStateFlow(preferences.getSliderValue())
     val sliderValue = _sliderValue.asStateFlow()
 
+    private val _selectMode = MutableStateFlow(preferences.getMode())
+    val selectMode = _selectMode.asStateFlow()
+
     fun toggleSwitch(type: SwitchType, isChecked: Boolean) {
         _switchStates.value = _switchStates.value.toMutableMap().apply { this[type] = isChecked }
         preferences.setSwitchState(type, isChecked)
@@ -28,6 +32,11 @@ class MainScreenViewmodel @Inject constructor(
     fun setSliderValue(value: Int) {
         _sliderValue.value = value
         preferences.setSliderValue(value)
+    }
+
+    fun setSelectMode(mode: ModeSelector) {
+        _selectMode.value = mode
+        preferences.setMode(mode)
     }
 
 
