@@ -29,8 +29,8 @@ fun ModeButton(
 ) {
     val shape = when {
         selected -> RoundedCornerShape(16.dp)
-        index == 0 && totalCount > 1 -> RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, topEnd = 0.dp, bottomEnd = 0.dp)
-        index == totalCount - 1 && totalCount > 1 -> RoundedCornerShape(topStart = 0.dp, bottomStart = 0.dp, topEnd = 16.dp, bottomEnd = 16.dp)
+        index == 0 && totalCount > 1 -> RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, topEnd = 4.dp, bottomEnd = 4.dp)
+        index == totalCount - 1 && totalCount > 1 -> RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp, topEnd = 16.dp, bottomEnd = 16.dp)
         else -> RoundedCornerShape(0.dp)
     }
     Button(
