@@ -45,7 +45,10 @@ fun ModeButton(
             .padding(horizontal = 2.dp)
             .height(48.dp)
     ) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
