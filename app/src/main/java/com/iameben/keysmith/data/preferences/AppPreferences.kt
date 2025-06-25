@@ -60,7 +60,7 @@ class AppPreferences @Inject constructor(context: Context) {
 
     fun setBool(key: String, value: Boolean) = prefs.edit() { putBoolean(key, value) }
 
-    fun getBool(key: String, defaultValue: Boolean): Boolean? = prefs.getBoolean(key, defaultValue)
+    fun getBool(key: String, defaultValue: Boolean): Boolean = prefs.getBoolean(key, defaultValue)
 
     fun clear() {
         prefs.edit() { clear() }
