@@ -3,14 +3,13 @@ package com.iameben.keysmith.data.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import com.iameben.keysmith.ui.components.enums.SwitchType
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.core.content.edit
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 
 @Singleton
-class AppPreferences @Inject constructor(@ApplicationContext context: Context) {
+class AppPreferences @Inject constructor(context: Context) {
 
     companion object {
         private const val PREFS_NAME = "app_prefs"
