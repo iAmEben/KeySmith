@@ -2,9 +2,12 @@ package com.iameben.keysmith.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -42,19 +45,21 @@ fun ModeButton(
         },
         shape = shape,
         modifier = Modifier
-            .padding(horizontal = 2.dp)
+            .padding(horizontal = 4.dp)
             .height(48.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .padding(8.dp)
         ) {
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
                 modifier = Modifier.size(16.dp)
             )
-            Space(size = 4.dp)
+            Space(size = 8.dp)
             Text(
                 text = text,
                 color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
