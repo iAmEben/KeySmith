@@ -50,7 +50,23 @@ class AppPreferences @Inject constructor(context: Context) {
         }
     }
 
+    fun setString(key: String, value: String) = prefs.edit() { putString(key, value) }
+
+    fun getString(key: String, defaultValue: String): String? = prefs.getString(key, defaultValue)
+
+    fun setInt(key: String, value: Int) = prefs.edit() { putInt(key, value) }
+
+    fun getInt(key: String, defaultValue: Int): Int = prefs.getInt(key, defaultValue)
+
+    fun setBool(key: String, value: Boolean) = prefs.edit() { putBoolean(key, value) }
+
+    fun getBool(key: String, defaultValue: Boolean): Boolean? = prefs.getBoolean(key, defaultValue)
+
     fun clear() {
         prefs.edit() { clear() }
     }
+
+    val context: Context
+        get() = this.context
+
 }
