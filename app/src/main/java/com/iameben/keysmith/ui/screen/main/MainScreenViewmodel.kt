@@ -46,7 +46,14 @@ class MainScreenViewmodel @Inject constructor(
     fun toggleSwitch(type: SwitchType, isChecked: Boolean) {
         val currentSwitches = _switchStates.value.toMutableMap()
         val numSwitchesOn = currentSwitches.values.count { it }
-        if (isChecked && numSwitchesOn >= 3 && _sliderValue.value.toInt() == 4) return
+        if (isChecked && numSwitchesOn >= 3 && _sliderValue.value.toInt() == 4) {
+            viewModelScope.launch{
+                _snackBarHostState.value.showSnackbar(
+                    message = "Please Increase password count"
+                )
+            }
+            return
+        }
         currentSwitches[type] = isChecked
         _switchStates.value = currentSwitches
         preferences.setSwitchState(type, isChecked)
