@@ -62,12 +62,17 @@ class PasswordGenerator(
         }
 
         val requiredChars = mutableListOf<Char>()
+        val uppercasePool = ('A'..'Z').toList()
+        val lowercasePool = ('a'..'z').toList()
+        val numberPool = ('0'..'9').toList()
+        val specialPool = "!@#$%^&*()_+-=[]{}|;:,.<>?".toList()
+
         enabledSwitches.forEach { switch ->
             val sampleChar = when (switch) {
-                SwitchType.UPPERCASE -> 'A'
-                SwitchType.LOWERCASE -> 'a'
-                SwitchType.NUMBERS -> '0'
-                SwitchType.SPECIAL_CHARACTERS -> '!'
+                SwitchType.UPPERCASE -> uppercasePool[secureRandom.nextInt(uppercasePool.size)]
+                SwitchType.LOWERCASE -> lowercasePool[secureRandom.nextInt(lowercasePool.size)]
+                SwitchType.NUMBERS -> numberPool[secureRandom.nextInt(numberPool.size)]
+                SwitchType.SPECIAL_CHARACTERS -> specialPool[secureRandom.nextInt(specialPool.size)]
             }
             requiredChars.add(sampleChar)
 
@@ -99,15 +104,22 @@ class PasswordGenerator(
 
                 val word = dictionary.filter { it.length == 2 }.random(secureRandom)
                 val requiredChars = mutableListOf<Char>()
+                val uppercasePool = ('A'..'Z').toList()
+                val lowercasePool = ('a'..'z').toList()
+                val numberPool = ('0'..'9').toList()
+                val specialPool = "!@#$%^&*()_+-=[]{}|;:,.<>?".toList()
+
                 enabledSwitches.forEach { switch ->
                     val sampleChar = when (switch) {
-                        SwitchType.UPPERCASE -> if (!word.any { it.isLowerCase() }) 'A' else null
-                        SwitchType.LOWERCASE -> if (!word.any { it.isUpperCase() }) 'a' else null
-                        SwitchType.NUMBERS -> if (!word.any { it.isDigit() }) '0' else null
-                        SwitchType.SPECIAL_CHARACTERS -> if (!word.any { !it.isLetterOrDigit() }) '!' else null
-                    }?.takeIf { true }
+                        SwitchType.UPPERCASE -> uppercasePool[secureRandom.nextInt(uppercasePool.size)]
+                        SwitchType.LOWERCASE -> lowercasePool[secureRandom.nextInt(lowercasePool.size)]
+                        SwitchType.NUMBERS -> numberPool[secureRandom.nextInt(numberPool.size)]
+                        SwitchType.SPECIAL_CHARACTERS -> specialPool[secureRandom.nextInt(specialPool.size)]
+                    }.takeIf { true }
                     sampleChar?.let { requiredChars.add(it) }
+
                 }
+
                 val remainingLength = length - 2 - requiredChars.size // 1 for the word
                 val randomChars = if (remainingLength > 0) {
                     val charPool = buildList {
@@ -128,15 +140,22 @@ class PasswordGenerator(
                 }
                 val wordLength = words.length
                 val remainingLength = length - wordLength
+
                 val requiredChars = mutableListOf<Char>()
+                val uppercasePool = ('A'..'Z').toList()
+                val lowercasePool = ('a'..'z').toList()
+                val numberPool = ('0'..'9').toList()
+                val specialPool = "!@#$%^&*()_+-=[]{}|;:,.<>?".toList()
+
                 enabledSwitches.forEach { switch ->
                     val sampleChar = when (switch) {
-                        SwitchType.UPPERCASE -> if (!words.any { it.isLowerCase() }) 'A' else null
-                        SwitchType.LOWERCASE -> if (!words.any { it.isUpperCase() }) 'a' else null
-                        SwitchType.NUMBERS -> if (!words.any { it.isDigit() }) '0' else null
-                        SwitchType.SPECIAL_CHARACTERS -> if (!words.any { !it.isLetterOrDigit() }) '!' else null
-                    }?.takeIf { true }
+                        SwitchType.UPPERCASE -> uppercasePool[secureRandom.nextInt(uppercasePool.size)]
+                        SwitchType.LOWERCASE -> lowercasePool[secureRandom.nextInt(lowercasePool.size)]
+                        SwitchType.NUMBERS -> numberPool[secureRandom.nextInt(numberPool.size)]
+                        SwitchType.SPECIAL_CHARACTERS -> specialPool[secureRandom.nextInt(specialPool.size)]
+                    }.takeIf { true }
                     sampleChar?.let { requiredChars.add(it) }
+
                 }
                 val fillLength = remainingLength - requiredChars.size
                 val randomChars = if (fillLength > 0) {
