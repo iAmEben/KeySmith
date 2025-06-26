@@ -6,7 +6,9 @@ import com.iameben.keysmith.data.preferences.AppPreferences
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
 import java.security.SecureRandom
+import kotlin.div
 import kotlin.math.max
+import kotlin.math.min
 
 class PasswordGenerator(
     private val preferences: AppPreferences,
@@ -32,6 +34,10 @@ class PasswordGenerator(
         if (effectiveLength < 4) {
             return PasswordResult.Error("Password length must be at least 4.")
         }
+        if (effectiveLength == 4 && effectiveSwitches.values.count { it } == 4) {
+            snackBarHostState.showSnackbar("Cannot use all switches if password count is four")
+            return PasswordResult.Error("Cannot use all switches if password count is four")
+        }
         if (effectiveMode == ModeSelector.SMART && dictionary.isEmpty()) {
             return PasswordResult.Error("Dictionary not loaded")
         }
@@ -46,24 +52,108 @@ class PasswordGenerator(
     }
 
     private fun generateRandomPassword(length: Int, switches: Map<SwitchType, Boolean>): String {
+        val enabledSwitches = switches.filter { it.value }.keys
+        if (enabledSwitches.isEmpty()) return ""
         val charPool = buildList {
             if (switches[SwitchType.UPPERCASE] == true) addAll('A'..'Z')
             if (switches[SwitchType.LOWERCASE] == true) addAll('a'..'z')
             if (switches[SwitchType.NUMBERS] == true) addAll('0'..'9')
             if (switches[SwitchType.SPECIAL_CHARACTERS] == true) addAll("!@#$%^&*()_+-=[]{}|;:,.<>?".toList())
         }
-        return (4..length)
+
+        val requiredChars = mutableListOf<Char>()
+        enabledSwitches.forEach { switch ->
+            val sampleChar = when (switch) {
+                SwitchType.UPPERCASE -> 'A'
+                SwitchType.LOWERCASE -> 'a'
+                SwitchType.NUMBERS -> '0'
+                SwitchType.SPECIAL_CHARACTERS -> '!'
+            }
+            requiredChars.add(sampleChar)
+
+        }
+
+        val remainingLength = length - requiredChars.size
+        if (remainingLength < 0) return requiredChars.joinToString("")
+
+        val randomChars = (1..remainingLength)
             .map { charPool[secureRandom.nextInt(charPool.size)] }
-            .joinToString("")
+            .toMutableList()
+
+        val allChars = (requiredChars + randomChars).toMutableList()
+        repeat(length) { i ->
+            val j = secureRandom.nextInt(i + 1)
+            allChars[i] = allChars.set(j, allChars[i])
+        }
+        return allChars.joinToString("")
     }
 
     private fun generateSmartPassword(length: Int, switches: Map<SwitchType, Boolean>): String {
         if (dictionary.isEmpty()) return ""
-        val baseWord = dictionary[secureRandom.nextInt(dictionary.size)]
-        val remainingLength = max(0, length - baseWord.length)
-        val randomPart = generateRandomPassword(remainingLength, switches)
-        return (baseWord + randomPart).take(length)
+        val enabledSwitches = switches.filter { it.value }.keys
+        val hasNumberOrSpecial = enabledSwitches.any { it == SwitchType.NUMBERS || it == SwitchType.SPECIAL_CHARACTERS }
+        val maxWords = if (hasNumberOrSpecial) 3 else 4
+
+        return when {
+            length == 4 && enabledSwitches.size == 3 -> {
+
+                val word = dictionary.filter { it.length == 2 }.random(secureRandom)
+                val requiredChars = mutableListOf<Char>()
+                enabledSwitches.forEach { switch ->
+                    val sampleChar = when (switch) {
+                        SwitchType.UPPERCASE -> if (!word.any { it.isLowerCase() }) 'A' else null
+                        SwitchType.LOWERCASE -> if (!word.any { it.isUpperCase() }) 'a' else null
+                        SwitchType.NUMBERS -> if (!word.any { it.isDigit() }) '0' else null
+                        SwitchType.SPECIAL_CHARACTERS -> if (!word.any { !it.isLetterOrDigit() }) '!' else null
+                    }?.takeIf { true }
+                    sampleChar?.let { requiredChars.add(it) }
+                }
+                val remainingLength = length - 2 - requiredChars.size // 1 for the word
+                val randomChars = if (remainingLength > 0) {
+                    val charPool = buildList {
+                        if (switches[SwitchType.UPPERCASE] == true) addAll('A'..'Z')
+                        if (switches[SwitchType.LOWERCASE] == true) addAll('a'..'z')
+                        if (switches[SwitchType.NUMBERS] == true) addAll('0'..'9')
+                        if (switches[SwitchType.SPECIAL_CHARACTERS] == true) addAll("!@#$%^&*()_+-=[]{}|;:,.<>?".toList())
+                    }
+                    (1..remainingLength).map { charPool[secureRandom.nextInt(charPool.size)] }
+                } else emptyList()
+                (listOf(word) + requiredChars + randomChars).joinToString("").take(length)
+            }
+            else -> {
+
+                val wordCount = min(max(1, (length / 2).coerceAtMost(maxWords)), enabledSwitches.size)
+                val words = (2..wordCount).joinToString("") {
+                    dictionary.filter { it.length <= length / wordCount }.random(secureRandom)
+                }
+                val wordLength = words.length
+                val remainingLength = length - wordLength
+                val requiredChars = mutableListOf<Char>()
+                enabledSwitches.forEach { switch ->
+                    val sampleChar = when (switch) {
+                        SwitchType.UPPERCASE -> if (!words.any { it.isLowerCase() }) 'A' else null
+                        SwitchType.LOWERCASE -> if (!words.any { it.isUpperCase() }) 'a' else null
+                        SwitchType.NUMBERS -> if (!words.any { it.isDigit() }) '0' else null
+                        SwitchType.SPECIAL_CHARACTERS -> if (!words.any { !it.isLetterOrDigit() }) '!' else null
+                    }?.takeIf { true }
+                    sampleChar?.let { requiredChars.add(it) }
+                }
+                val fillLength = remainingLength - requiredChars.size
+                val randomChars = if (fillLength > 0) {
+                    val charPool = buildList {
+                        if (switches[SwitchType.UPPERCASE] == true) addAll('A'..'Z')
+                        if (switches[SwitchType.LOWERCASE] == true) addAll('a'..'z')
+                        if (switches[SwitchType.NUMBERS] == true) addAll('0'..'9')
+                        if (switches[SwitchType.SPECIAL_CHARACTERS] == true) addAll("!@#$%^&*()_+-=[]{}|;:,.<>?".toList())
+                    }
+                    (1..fillLength).map { charPool[secureRandom.nextInt(charPool.size)] }
+                } else emptyList()
+                (listOf(words) + requiredChars + randomChars).joinToString("").take(length)
+            }
+        }
     }
+
+
 
     private fun getPasswordStrength(password: String): String {
         if (password.isEmpty()) return "weak"
@@ -83,4 +173,7 @@ class PasswordGenerator(
     private fun loadSwitchStatesFromPreferences(): Map<SwitchType, Boolean> {
         return SwitchType.entries.associateWith { preferences.getBool(it.name, false) }
     }
+
+    private fun <T> List<T>.random(random: SecureRandom): T = this[random.nextInt(size)]
+
 }
