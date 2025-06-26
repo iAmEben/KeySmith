@@ -63,8 +63,21 @@ class MainScreenViewmodel @Inject constructor(
     fun isSwitchOn(type: SwitchType): Boolean = switchStates.value[type] == true
 
     fun setSliderValue(value: Int) {
+        val length = _sliderValue.value.toInt()
+        val currentSwitches = _switchStates.value.toMutableMap()
+        val numSwitchesOn = currentSwitches.values.count { it }
         _sliderValue.value = value
         preferences.setSliderValue(value)
+
+        if (length == 4 && numSwitchesOn == 4) {
+            currentSwitches[SwitchType.UPPERCASE] = false
+            _switchStates.value = currentSwitches
+            preferences.setSwitchState(SwitchType.UPPERCASE, false)
+            viewModelScope.launch {
+                _snackBarHostState.value.showSnackbar("Cannot use all switches if word count is four")
+            }
+            return
+        }
         viewModelScope.launch { generatedPassword(_snackBarHostState.value) }
     }
 
