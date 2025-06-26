@@ -1,5 +1,8 @@
 package com.iameben.keysmith.ui.screen.main
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -128,6 +131,16 @@ class MainScreenViewmodel @Inject constructor(
                 _generatedPassword.value = ""
                 _passwordStrength.value = "weak"
             }
+        }
+    }
+
+    fun copyToClipboard(context: Context, label: String = "text", text: String) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText(label, text)
+        clipboard.setPrimaryClip(clip)
+
+        viewModelScope.launch {
+            _snackBarHostState.value.showSnackbar("Password Copied!")
         }
     }
 

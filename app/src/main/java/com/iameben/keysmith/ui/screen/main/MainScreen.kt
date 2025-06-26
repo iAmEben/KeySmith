@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,6 +72,7 @@ fun MainScreen(
     val copyIconId = if (isDarkTheme) R.drawable.ic_copy_dark else R.drawable.ic_copy_light
     val rotationAngle by animateFloatAsState(targetValue = if (isDarkTheme) 180f else 0f)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(snackBarHostState) {
         if (snackBarHostState != mainScreenViewmodel.snackBarHostState.value){
@@ -253,7 +255,7 @@ fun MainScreen(
                     .fillMaxWidth()
                     .padding(8.dp),
                 onClick = {
-
+                    mainScreenViewmodel.copyToClipboard(context = context, text = generatedPassword)
                 }
             ) {
                 Text(
