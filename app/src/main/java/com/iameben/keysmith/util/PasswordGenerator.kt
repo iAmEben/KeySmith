@@ -26,7 +26,7 @@ class PasswordGenerator(
         val effectiveSwitches = switches ?: loadSwitchStatesFromPreferences()
 
         if (effectiveSwitches.values.none { it }){
-            snackBarHostState?.showSnackbar("Please turn on at least one character type switch")
+            snackBarHostState.showSnackbar("Please turn on at least one character type switch")
             return PasswordResult.Error("Please turn on at least one character type switch.")
         }
         if (effectiveLength < 4) {

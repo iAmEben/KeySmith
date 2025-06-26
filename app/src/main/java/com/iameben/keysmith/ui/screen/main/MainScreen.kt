@@ -51,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.R
 import com.iameben.keysmith.data.preferences.AppPreferences
+import com.iameben.keysmith.ui.components.CustomSnackBarHost
 import com.iameben.keysmith.ui.components.LabeledSwitch
 import com.iameben.keysmith.ui.components.ModeButton
 import com.iameben.keysmith.ui.components.PasswordIndicator
@@ -88,11 +89,14 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(snackBarHostState) {
-        mainScreenViewmodel.setSnackBarHotState(snackBarHostState)
+        if (snackBarHostState != mainScreenViewmodel.snackBarHostState.value){
+            mainScreenViewmodel.setSnackBarHotState(snackBarHostState)
+        }
+
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = { CustomSnackBarHost(hostState = snackBarHostState) },
         modifier = modifier
             .fillMaxSize()
     ) { paddingValues ->
