@@ -1,6 +1,6 @@
 package com.iameben.keysmith.util
 
-import android.health.connect.datatypes.units.Length
+
 import androidx.compose.material3.SnackbarHostState
 import com.iameben.keysmith.data.preferences.AppPreferences
 import com.iameben.keysmith.ui.components.enums.ModeSelector
@@ -13,19 +13,20 @@ class PasswordGenerator(
     private val wordListUtil: WordListUtil
 ) {
     private val secureRandom = SecureRandom()
-    private val dictionary: List<String> by lazy { wordListUtil.loadWordList(preferences.context) }
+    private val dictionary: List<String> by lazy { wordListUtil.loadWordList() }
 
     sealed class PasswordResult {
         data class Success(val password: String, val strength: String) : PasswordResult()
         data class Error(val message: String) : PasswordResult()
     }
 
-    fun generatePassword(mode: ModeSelector? = null, length: Int? = null, switches: Map<SwitchType, Boolean>? = null, snackBarHostState: SnackbarHostState? = null): PasswordResult {
+    suspend fun generatePassword(mode: ModeSelector? = null, length: Int? = null, switches: Map<SwitchType, Boolean>? = null, snackBarHostState: SnackbarHostState? = null): PasswordResult {
         val effectiveMode = mode ?: ModeSelector.valueOf(preferences.getString("mode_selector", "RANDOM")!!)
         val effectiveLength = length ?: preferences.getInt("slider_value", 9)
         val effectiveSwitches = switches ?: loadSwitchStatesFromPreferences()
 
         if (effectiveSwitches.values.none { it }){
+            snackBarHostState?.showSnackbar("Please turn on at least one character type switch")
             return PasswordResult.Error("Please turn on at least one character type switch.")
         }
         if (effectiveLength < 4) {

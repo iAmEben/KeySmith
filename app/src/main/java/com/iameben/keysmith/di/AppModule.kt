@@ -20,7 +20,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWordListUtil(@ApplicationContext context: Context): WordListUtil = WordListUtil
+    fun provideWordListUtil(@ApplicationContext context: Context): WordListUtil = WordListUtil(context)
 
     @Provides
     @Singleton

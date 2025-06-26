@@ -3,11 +3,13 @@ package com.iameben.keysmith.ui.screen.main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.iameben.keysmith.data.preferences.AppPreferences
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
 import com.iameben.keysmith.util.PasswordGenerator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +33,11 @@ class MainScreenViewmodel @Inject constructor(
     val passwordStrength = _passwordStrength.asStateFlow()
 
     init {
-        generatedInitialPassword()
+
+        viewModelScope.launch {
+            generatedInitialPassword()
+        }
+
     }
     fun toggleSwitch(type: SwitchType, isChecked: Boolean) {
         val currentSwitches = _switchStates.value.toMutableMap()
@@ -40,7 +46,7 @@ class MainScreenViewmodel @Inject constructor(
         currentSwitches[type] = isChecked
         _switchStates.value = currentSwitches
         preferences.setSwitchState(type, isChecked)
-        generatedPassword()
+        viewModelScope.launch { generatedPassword() }
     }
 
     fun isSwitchOn(type: SwitchType): Boolean = switchStates.value[type] == true
@@ -48,16 +54,16 @@ class MainScreenViewmodel @Inject constructor(
     fun setSliderValue(value: Int) {
         _sliderValue.value = value
         preferences.setSliderValue(value)
-        generatedPassword()
+        viewModelScope.launch { generatedPassword() }
     }
 
     fun setSelectMode(mode: ModeSelector) {
         _selectMode.value = mode
         preferences.setMode(mode)
-        generatedPassword()
+        viewModelScope.launch { generatedPassword() }
     }
 
-    private fun generatedInitialPassword() {
+    private suspend fun generatedInitialPassword() {
         val result = passwordGenerator.generatePassword(
             mode = _selectMode.value,
             length = _sliderValue.value.toInt(),
@@ -76,7 +82,7 @@ class MainScreenViewmodel @Inject constructor(
         }
     }
 
-    private fun generatedPassword() {
+    private suspend fun generatedPassword() {
         val result = passwordGenerator.generatePassword(
             mode = _selectMode.value,
             length = _sliderValue.value.toInt(),

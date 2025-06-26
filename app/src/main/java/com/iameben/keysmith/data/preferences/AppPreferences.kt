@@ -66,7 +66,5 @@ class AppPreferences @Inject constructor(context: Context) {
         prefs.edit() { clear() }
     }
 
-    val context: Context
-        get() = this.context
 
 }
