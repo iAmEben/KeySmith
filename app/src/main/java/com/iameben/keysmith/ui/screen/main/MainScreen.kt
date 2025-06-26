@@ -32,10 +32,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,6 +85,11 @@ fun MainScreen(
     val themeIconId = if (isDarkTheme) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
     val copyIconId = if (isDarkTheme) R.drawable.ic_copy_dark else R.drawable.ic_copy_light
     val rotationAngle by animateFloatAsState(targetValue = if (isDarkTheme) 180f else 0f)
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(snackBarHostState) {
+        mainScreenViewmodel.setSnackBarHotState(snackBarHostState)
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) },
@@ -167,7 +174,7 @@ fun MainScreen(
             }
 
             Space()
-            
+
 
             PasswordStrengthIndicator(
                 strength = passwordStrength,

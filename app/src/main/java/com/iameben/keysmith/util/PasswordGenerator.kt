@@ -20,7 +20,7 @@ class PasswordGenerator(
         data class Error(val message: String) : PasswordResult()
     }
 
-    suspend fun generatePassword(mode: ModeSelector? = null, length: Int? = null, switches: Map<SwitchType, Boolean>? = null, snackBarHostState: SnackbarHostState? = null): PasswordResult {
+    suspend fun generatePassword(mode: ModeSelector? = null, length: Int? = null, switches: Map<SwitchType, Boolean>? = null, snackBarHostState: SnackbarHostState): PasswordResult {
         val effectiveMode = mode ?: ModeSelector.valueOf(preferences.getString("mode_selector", "RANDOM")!!)
         val effectiveLength = length ?: preferences.getInt("slider_value", 9)
         val effectiveSwitches = switches ?: loadSwitchStatesFromPreferences()

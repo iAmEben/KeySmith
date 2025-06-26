@@ -1,5 +1,6 @@
 package com.iameben.keysmith.ui.screen.main
 
+import androidx.compose.material3.SnackbarHostState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.ViewModel
@@ -32,10 +33,13 @@ class MainScreenViewmodel @Inject constructor(
     private val _passwordStrength = MutableStateFlow("weak")
     val passwordStrength = _passwordStrength.asStateFlow()
 
+    private val _snackBarHostState = MutableStateFlow(SnackbarHostState())
+    val snackBarHostState = _snackBarHostState.asStateFlow()
+
     init {
 
         viewModelScope.launch {
-            generatedInitialPassword()
+            generatedInitialPassword(_snackBarHostState.value)
         }
 
     }
@@ -46,7 +50,7 @@ class MainScreenViewmodel @Inject constructor(
         currentSwitches[type] = isChecked
         _switchStates.value = currentSwitches
         preferences.setSwitchState(type, isChecked)
-        viewModelScope.launch { generatedPassword() }
+        viewModelScope.launch { generatedPassword(_snackBarHostState.value) }
     }
 
     fun isSwitchOn(type: SwitchType): Boolean = switchStates.value[type] == true
@@ -54,20 +58,25 @@ class MainScreenViewmodel @Inject constructor(
     fun setSliderValue(value: Int) {
         _sliderValue.value = value
         preferences.setSliderValue(value)
-        viewModelScope.launch { generatedPassword() }
+        viewModelScope.launch { generatedPassword(_snackBarHostState.value) }
     }
 
     fun setSelectMode(mode: ModeSelector) {
         _selectMode.value = mode
         preferences.setMode(mode)
-        viewModelScope.launch { generatedPassword() }
+        viewModelScope.launch { generatedPassword(_snackBarHostState.value) }
     }
 
-    private suspend fun generatedInitialPassword() {
+    fun setSnackBarHotState(snackBarHostState: SnackbarHostState) {
+        _snackBarHostState.value = snackBarHostState
+    }
+
+    private suspend fun generatedInitialPassword(snackBarHostState: SnackbarHostState) {
         val result = passwordGenerator.generatePassword(
             mode = _selectMode.value,
             length = _sliderValue.value.toInt(),
-            switches = _switchStates.value
+            switches = _switchStates.value,
+            snackBarHostState = snackBarHostState
         )
 
         when (result) {
@@ -82,11 +91,12 @@ class MainScreenViewmodel @Inject constructor(
         }
     }
 
-    private suspend fun generatedPassword() {
+    private suspend fun generatedPassword(snackBarHostState: SnackbarHostState) {
         val result = passwordGenerator.generatePassword(
             mode = _selectMode.value,
             length = _sliderValue.value.toInt(),
-            switches = _switchStates.value
+            switches = _switchStates.value,
+            snackBarHostState = snackBarHostState
         )
 
         when (result) {
