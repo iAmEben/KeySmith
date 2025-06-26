@@ -1,20 +1,16 @@
 package com.iameben.keysmith.ui.screen.main
 
-import android.annotation.SuppressLint
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -28,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,30 +37,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.R
-import com.iameben.keysmith.data.preferences.AppPreferences
 import com.iameben.keysmith.ui.components.CustomSnackBarHost
 import com.iameben.keysmith.ui.components.LabeledSwitch
 import com.iameben.keysmith.ui.components.ModeButton
-import com.iameben.keysmith.ui.components.PasswordIndicator
 import com.iameben.keysmith.ui.components.PasswordStrengthIndicator
 import com.iameben.keysmith.ui.components.RowStrokedRounded
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
-import com.iameben.keysmith.ui.theme.DeepRed
-import com.iameben.keysmith.ui.theme.Gold
-import com.iameben.keysmith.ui.theme.KeySmithTheme
-import com.iameben.keysmith.ui.theme.Orange
-import com.iameben.keysmith.ui.theme.Red
-import com.iameben.keysmith.ui.theme.RusticOrange
-import com.iameben.keysmith.ui.theme.YellowBrown
 
 
 @Composable
