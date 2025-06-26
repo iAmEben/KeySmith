@@ -25,8 +25,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,6 +52,7 @@ import com.iameben.keysmith.data.preferences.AppPreferences
 import com.iameben.keysmith.ui.components.LabeledSwitch
 import com.iameben.keysmith.ui.components.ModeButton
 import com.iameben.keysmith.ui.components.PasswordIndicator
+import com.iameben.keysmith.ui.components.PasswordStrengthIndicator
 import com.iameben.keysmith.ui.components.RowStrokedRounded
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
@@ -72,223 +76,219 @@ fun MainScreen(
     val switchStates by mainScreenViewmodel.switchStates.collectAsState()
     val sliderValue by mainScreenViewmodel.sliderValue.collectAsState()
     val selectMode by mainScreenViewmodel.selectMode.collectAsState()
+    val generatedPassword by mainScreenViewmodel.generatedPassword.collectAsState()
+    val passwordStrength by mainScreenViewmodel.passwordStrength.collectAsState()
+    val snackBarHostState = remember { SnackbarHostState() }
     val isDarkTheme by themeViewmodel.isDarkTheme.collectAsState()
     val themeIconId = if (isDarkTheme) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
     val copyIconId = if (isDarkTheme) R.drawable.ic_copy_dark else R.drawable.ic_copy_light
     val rotationAngle by animateFloatAsState(targetValue = if (isDarkTheme) 180f else 0f)
 
-
-    Column(
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
-            .padding(WindowInsets.safeDrawing.asPaddingValues())
-            .verticalScroll(rememberScrollState())
-    ) {
-
-        Row(
+    ) { paddingValues ->
+        Column(
             modifier = modifier
-                .fillMaxWidth()
-                .height(30.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp)
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
         ) {
 
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(30.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
 
 
-            Box(modifier.fillMaxWidth()) {
 
-                IconButton(
-                    onClick = {themeViewmodel.toggleTheme()},
-                    modifier = modifier
-                        .wrapContentSize()
-                        .padding(top = 18.dp)
-                        .align(Alignment.CenterStart)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
+                Box(modifier.fillMaxWidth()) {
 
-                ) {
+                    IconButton(
+                        onClick = {themeViewmodel.toggleTheme()},
+                        modifier = modifier
+                            .wrapContentSize()
+                            .padding(top = 18.dp)
+                            .align(Alignment.CenterStart)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+
+                    ) {
+                        Icon(
+                            painter = painterResource(id = themeIconId),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier
+                                .size(18.dp)
+                                .graphicsLayer(rotationZ = rotationAngle)
+                        )
+                    }
+
+
                     Icon(
-                        painter = painterResource(id = themeIconId),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .graphicsLayer(rotationZ = rotationAngle)
+                        painter = painterResource(R.drawable.ic_save),
+                        contentDescription = "Saved Passwords",
+                        modifier
+                            .size(24.dp)
+                            .align(Alignment.CenterEnd),
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
 
 
+            }
+
+            Space(size = 34.dp)
+
+            RowStrokedRounded(
+                modifier = Modifier.fillMaxWidth(),
+
+                ) {
+                Text(
+                    text = generatedPassword,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
                 Icon(
-                    painter = painterResource(R.drawable.ic_save),
-                    contentDescription = "Saved Passwords",
-                    modifier
+                    painter = painterResource(id = copyIconId),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
                         .size(24.dp)
-                        .align(Alignment.CenterEnd),
-                    tint = MaterialTheme.colorScheme.onBackground
+
+                )
+
+            }
+
+            Space()
+            
+
+            PasswordStrengthIndicator(
+                strength = passwordStrength,
+                isDarkTheme = isDarkTheme
+            )
+
+            Space(size = 34.dp)
+
+            Text(
+                text = "Password Count:",
+                fontSize = 20.sp
+            )
+
+            Space()
+
+            RowStrokedRounded(padding = 10.dp, corner = 10.dp) {
+
+                Text(
+                    text = "$sliderValue",
+                    modifier = modifier
+                        .padding(start = 8.dp, end = 8.dp),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
 
+            Space()
 
-        }
 
-        Space(size = 34.dp)
-
-        RowStrokedRounded(
-            modifier = Modifier.fillMaxWidth(),
-
-        ) {
-            Text(
-                text = "rgqq341Fgg@^"
-            )
-
-            Icon(
-                painter = painterResource(id = copyIconId),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground,
+            Slider(
+                value = sliderValue.toFloat(),
+                onValueChange = { mainScreenViewmodel.setSliderValue(it.toInt()) },
+                valueRange = 4f..21f,
+                steps = 16,
+                colors = SliderDefaults.colors(
+                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                    thumbColor = MaterialTheme.colorScheme.primary,
+                    inactiveTrackColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
                 modifier = Modifier
-                    .size(24.dp)
-
+                    .padding(vertical = 16.dp)
             )
 
-        }
+            Space()
 
-        Space()
-
-        if (isSystemInDarkTheme()){
-
-            PasswordIndicator(
-                dotSize = 16.dp,
-                dotColor1 = DeepRed,
-                dotColor2 = RusticOrange,
-                dotColor3 = Gold
-
-            )
-
-        } else {
-
-            PasswordIndicator(
-                dotSize = 16.dp,
-                dotColor1 = Red,
-                dotColor2 = Orange,
-                dotColor3 = YellowBrown
-
-            )
-
-        }
+            val modes = ModeSelector.entries.toTypedArray()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+                modes.forEachIndexed { index, mode ->
+                    ModeButton(
+                        text = mode.name,
+                        iconRes = if (mode == ModeSelector.RANDOM) R.drawable.ic_random else R.drawable.ic_smart,
+                        selected = selectMode == mode,
+                        onClick = { mainScreenViewmodel.setSelectMode(mode) },
+                        index = index,
+                        totalCount = modes.size
+                    )
+                }
+            }
 
 
-        Space(size = 34.dp)
+            Space()
 
-        Text(
-            text = "Password Count:",
-            fontSize = 20.sp
-        )
-
-        Space()
-
-        RowStrokedRounded(padding = 10.dp, corner = 10.dp) {
-
-            Text(
-                text = "$sliderValue",
-                modifier = modifier
-                    .padding(start = 8.dp, end = 8.dp)
-            )
-        }
-
-        Space()
-
-
-        Slider(
-            value = sliderValue.toFloat(),
-            onValueChange = { mainScreenViewmodel.setSliderValue(it.toInt()) },
-            valueRange = 4f..21f,
-            steps = 16,
-            colors = SliderDefaults.colors(
-                activeTrackColor = MaterialTheme.colorScheme.primary,
-                thumbColor = MaterialTheme.colorScheme.primary,
-                inactiveTrackColor = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-        )
-
-        Space()
-
-        val modes = ModeSelector.entries.toTypedArray()
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ){
-            modes.forEachIndexed { index, mode ->
-                ModeButton(
-                    text = mode.name,
-                    iconRes = if (mode == ModeSelector.RANDOM) R.drawable.ic_random else R.drawable.ic_smart,
-                    selected = selectMode == mode,
-                    onClick = { mainScreenViewmodel.setSelectMode(mode) },
-                    index = index,
-                    totalCount = modes.size
+            SwitchType.entries.forEach { type ->
+                val isChecked by remember { derivedStateOf { switchStates[type] == true } }
+                LabeledSwitch(
+                    label = type.name.replace("_", " ").lowercase(),
+                    checked = isChecked,
+                    onCheckedChange = {checked ->
+                        mainScreenViewmodel.toggleSwitch(type, checked)
+                    }
                 )
             }
-        }
-
-
-        Space()
-
-        SwitchType.entries.forEach { type ->
-            val isChecked by remember { derivedStateOf { switchStates[type] == true } }
-            LabeledSwitch(
-                label = type.name.replace("_", " ").lowercase(),
-                checked = isChecked,
-                onCheckedChange = {checked ->
-                    mainScreenViewmodel.toggleSwitch(type, checked)
-                }
-            )
-        }
 
 
 
 
-        Space(size = 24.dp)
+            Space(size = 24.dp)
 
-        Button(
-            shape = RoundedCornerShape(16.dp),
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            onClick = {
-
-            }
-        ) {
-            Text(
+            Button(
+                shape = RoundedCornerShape(16.dp),
                 modifier = modifier
+                    .fillMaxWidth()
                     .padding(8.dp),
-                text = "COPY",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onPrimary,
-            )
+                onClick = {
+
+                }
+            ) {
+                Text(
+                    modifier = modifier
+                        .padding(8.dp),
+                    text = "COPY",
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+            }
+
         }
-
     }
+
 
 }
 
-@SuppressLint("ViewModelConstructorInComposable")
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    val mockPreferences = AppPreferences(LocalContext.current)
-    val themeViewmodel = ThemeViewmodel()
-    val mainScreenViewmodel = MainScreenViewmodel(mockPreferences)
-
-    KeySmithTheme {
-        MainScreen(
-            modifier = Modifier.fillMaxSize(),
-            themeViewmodel = themeViewmodel,
-            mainScreenViewmodel = mainScreenViewmodel
-        )
-    }
-}
+//@SuppressLint("ViewModelConstructorInComposable")
+//@Preview(showBackground = true)
+//@Composable
+//fun MainScreenPreview() {
+//    val mockPreferences = AppPreferences(LocalContext.current)
+//    val themeViewmodel = ThemeViewmodel()
+//    val mainScreenViewmodel = MainScreenViewmodel(mockPreferences)
+//
+//    KeySmithTheme {
+//        MainScreen(
+//            modifier = Modifier.fillMaxSize(),
+//            themeViewmodel = themeViewmodel,
+//            mainScreenViewmodel = mainScreenViewmodel
+//        )
+//    }
+//}
