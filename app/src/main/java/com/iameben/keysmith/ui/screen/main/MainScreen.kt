@@ -70,7 +70,6 @@ fun MainScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val isDarkTheme by themeViewmodel.isDarkTheme.collectAsState()
     val themeIconId = if (isDarkTheme) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
-//    val copyIconId = if (isDarkTheme) R.drawable.ic_copy_dark else R.drawable.ic_copy_light
     val rotationAngle by animateFloatAsState(targetValue = if (isDarkTheme) 180f else 0f)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
