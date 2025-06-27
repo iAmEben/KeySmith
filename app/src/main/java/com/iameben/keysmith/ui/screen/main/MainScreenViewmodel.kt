@@ -49,6 +49,15 @@ class MainScreenViewmodel @Inject constructor(
     fun toggleSwitch(type: SwitchType, isChecked: Boolean) {
         val currentSwitches = _switchStates.value.toMutableMap()
         val numSwitchesOn = currentSwitches.values.count { it }
+
+        if (!isChecked && numSwitchesOn == 1 && currentSwitches[type] == true){
+            viewModelScope.launch{
+                _snackBarHostState.value.showSnackbar(
+                    message = "At least one switch must be enabled"
+                )
+            }
+            return
+        }
         if (isChecked && numSwitchesOn >= 3 && _sliderValue.value.toInt() == 4) {
             viewModelScope.launch{
                 _snackBarHostState.value.showSnackbar(
@@ -57,6 +66,7 @@ class MainScreenViewmodel @Inject constructor(
             }
             return
         }
+
         currentSwitches[type] = isChecked
         _switchStates.value = currentSwitches
         preferences.setSwitchState(type, isChecked)
