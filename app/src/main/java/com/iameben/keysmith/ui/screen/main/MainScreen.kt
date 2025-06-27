@@ -48,6 +48,7 @@ import com.iameben.keysmith.ui.components.CustomSnackBarHost
 import com.iameben.keysmith.ui.components.LabeledSwitch
 import com.iameben.keysmith.ui.components.ModeButton
 import com.iameben.keysmith.ui.components.PasswordStrengthIndicator
+import com.iameben.keysmith.ui.components.ReloadIcon
 import com.iameben.keysmith.ui.components.RowStrokedRounded
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
@@ -144,30 +145,20 @@ fun MainScreen(
 
             RowStrokedRounded(
                 modifier = Modifier.fillMaxWidth(),
-
                 ) {
+
                 Text(
                     text = generatedPassword,
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.bodyLarge
                 )
-
-                IconButton(
+                ReloadIcon(
                     onClick = {
                         scope.launch {
                             mainScreenViewmodel.generatedPassword(snackBarHostState)
                         }
-                    },
-                    modifier = Modifier
-                        .size(24.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_reload),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onBackground
-
-                    )
-                }
+                    }
+                )
 
 
             }
