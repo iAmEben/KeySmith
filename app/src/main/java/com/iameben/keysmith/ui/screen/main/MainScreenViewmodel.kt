@@ -124,7 +124,7 @@ class MainScreenViewmodel @Inject constructor(
         }
     }
 
-    private suspend fun generatedPassword(snackBarHostState: SnackbarHostState) {
+    suspend fun generatedPassword(snackBarHostState: SnackbarHostState) {
         val result = passwordGenerator.generatePassword(
             mode = _selectMode.value,
             length = _sliderValue.value.toInt(),

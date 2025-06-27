@@ -51,6 +51,7 @@ import com.iameben.keysmith.ui.components.PasswordStrengthIndicator
 import com.iameben.keysmith.ui.components.RowStrokedRounded
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -152,14 +153,23 @@ fun MainScreen(
                     style = MaterialTheme.typography.bodyLarge
                 )
 
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_reload),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            mainScreenViewmodel.generatedPassword(snackBarHostState)
+                        }
+                    },
                     modifier = Modifier
                         .size(24.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_reload),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground
 
-                )
+                    )
+                }
+
 
             }
 
