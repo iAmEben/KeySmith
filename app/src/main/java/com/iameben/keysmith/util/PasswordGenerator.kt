@@ -6,7 +6,6 @@ import com.iameben.keysmith.data.preferences.AppPreferences
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
 import java.security.SecureRandom
-import kotlin.div
 import kotlin.math.max
 import kotlin.math.min
 
@@ -120,7 +119,7 @@ class PasswordGenerator(
 
                 }
 
-                val remainingLength = length - 2 - requiredChars.size // 1 for the word
+                val remainingLength = length - 2 - requiredChars.size
                 val randomChars = if (remainingLength > 0) {
                     val charPool = buildList {
                         if (switches[SwitchType.UPPERCASE] == true) addAll('A'..'Z')

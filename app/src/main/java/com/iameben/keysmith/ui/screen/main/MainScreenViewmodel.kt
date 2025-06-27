@@ -46,6 +46,8 @@ class MainScreenViewmodel @Inject constructor(
         }
 
     }
+
+
     fun toggleSwitch(type: SwitchType, isChecked: Boolean) {
         val currentSwitches = _switchStates.value.toMutableMap()
         val numSwitchesOn = currentSwitches.values.count { it }
@@ -97,7 +99,7 @@ class MainScreenViewmodel @Inject constructor(
     fun setSelectMode(mode: ModeSelector) {
         _selectMode.value = mode
         preferences.setMode(mode)
-        viewModelScope.launch { generatedPassword(_snackBarHostState.value) }
+//        viewModelScope.launch { generatedPassword(_snackBarHostState.value) }
     }
 
     fun setSnackBarHotState(snackBarHostState: SnackbarHostState) {
