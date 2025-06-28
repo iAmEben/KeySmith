@@ -98,8 +98,13 @@ class MainScreenViewmodel @Inject constructor(
 
     fun setSelectMode(mode: ModeSelector) {
         _selectMode.value = mode
+
+        if (mode != preferences.getMode()){
+            viewModelScope.launch { generatedPassword(_snackBarHostState.value) }
+        }
         preferences.setMode(mode)
-//        viewModelScope.launch { generatedPassword(_snackBarHostState.value) }
+
+
     }
 
     fun setSnackBarHotState(snackBarHostState: SnackbarHostState) {
