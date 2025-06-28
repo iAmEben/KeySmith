@@ -101,6 +101,7 @@ class PasswordGenerator(
 
 
         return when {
+
             length == 4 && enabledSwitches.size == 3 -> {
 
                 val word = dictionary.filter { it.length == 2 }.random(secureRandom)
@@ -238,6 +239,7 @@ class PasswordGenerator(
 
                 return password.take(length)
             }
+
             else -> {
 
                 val wordCount = min(max(1, (length / 2).coerceAtMost(maxWords)), enabledSwitches.size)
@@ -321,7 +323,6 @@ class PasswordGenerator(
     }
 
 
-    // Helper function to build character pool from enabled switches
     private fun buildCharPool(switches: Map<SwitchType, Boolean>): List<Char> {
         return buildList {
             if (switches[SwitchType.LOWERCASE] == true) addAll('a'..'z')
