@@ -96,7 +96,9 @@ class PasswordGenerator(
         if (dictionary.isEmpty()) return ""
         val enabledSwitches = switches.filter { it.value }.keys
         val hasNumberOrSpecial = enabledSwitches.any { it == SwitchType.NUMBERS || it == SwitchType.SPECIAL_CHARACTERS }
+        val isUpperOrLowercase = enabledSwitches.any { it == SwitchType.UPPERCASE || it == SwitchType.LOWERCASE }
         val maxWords = if (hasNumberOrSpecial) 3 else 4
+
 
         return when {
             length == 4 && enabledSwitches.size == 3 -> {
@@ -130,6 +132,113 @@ class PasswordGenerator(
                     (1..remainingLength).map { charPool[secureRandom.nextInt(charPool.size)] }
                 } else emptyList()
                 (listOf(word) + requiredChars + randomChars).joinToString("").take(length)
+            }
+
+            isUpperOrLowercase -> {
+
+                val requiredChars = mutableListOf<Char>()
+                val uppercasePool = ('A'..'Z').toList()
+                val lowercasePool = ('a'..'z').toList()
+                val numberPool = ('0'..'9').toList()
+                val specialPool = "!@#$%^&*()_+-=[]{}|;:,.<>?".toList()
+
+                val wordCount = when {
+                    length < 6 -> 1
+                    length < 10 -> 2
+                    else -> 3
+                }.coerceAtMost(dictionary.size) // Limit by dictionary size if needed
+
+                // Calculate maximum word length considering separators
+                val separatorsNeeded = maxOf(0, wordCount - 1)
+                val maxTotalWordLength = length - separatorsNeeded
+                val avgWordLength = if (wordCount > 0) maxTotalWordLength / wordCount else 0
+
+                // Select words from dictionary
+                val words = mutableListOf<String>()
+                var currentLength = 0
+                for (i in 0 until wordCount) {
+                    val remainingLength = maxTotalWordLength - currentLength
+                    val maxWordLength = minOf(remainingLength, avgWordLength).coerceAtLeast(2)
+                    val availableWords = dictionary.filter { it.length in 2..maxWordLength }
+                    if (availableWords.isEmpty()) break
+                    val word = availableWords.random(secureRandom)
+                    words.add(word)
+                    currentLength += word.length
+                }
+
+                if (words.isEmpty()) {
+                    // Fallback to random characters if no words fit
+                    val charPool = buildCharPool(switches)
+                    return (1..length).map { charPool.random(secureRandom) }.joinToString("")
+                }
+
+                // Apply casing to words based on switches
+                val casedWords = words.map { word ->
+                    val lowerEnabled = switches[SwitchType.LOWERCASE] == true
+                    val upperEnabled = switches[SwitchType.UPPERCASE] == true
+                    when {
+                        lowerEnabled && upperEnabled -> {
+                            when (secureRandom.nextInt(3)) {
+                                0 -> word.lowercase()
+                                1 -> word.uppercase()
+                                else -> word.map { if (secureRandom.nextBoolean()) it.uppercaseChar() else it.lowercaseChar() }.joinToString("")
+                            }
+                        }
+                        lowerEnabled -> word.lowercase()
+                        upperEnabled -> word.uppercase()
+                        else -> word // Default if no letter switches
+                    }
+                }
+
+                // Generate separators
+                val charPool = buildCharPool(switches)
+                val separators = (1..separatorsNeeded).map { charPool.random(secureRandom).toString() }
+
+                // Build password with words and separators
+                val passwordBuilder = StringBuilder()
+                for (i in casedWords.indices) {
+                    passwordBuilder.append(casedWords[i])
+                    if (i < separators.size) passwordBuilder.append(separators[i])
+                }
+
+                // Fill remaining length with random characters
+                val remainingLength = length - passwordBuilder.length
+                if (remainingLength > 0) {
+                    val randomChars = (1..remainingLength).map { charPool.random(secureRandom) }
+                    passwordBuilder.append(randomChars.joinToString(""))
+                }
+
+                // Ensure all enabled switch types are represented
+                var password = passwordBuilder.toString()
+                val missingTypes = enabledSwitches.filter { switch ->
+                    when (switch) {
+                        SwitchType.LOWERCASE -> !password.any { it.isLowerCase() }
+                        SwitchType.UPPERCASE -> !password.any { it.isUpperCase() }
+                        SwitchType.NUMBERS -> !password.any { it.isDigit() }
+                        SwitchType.SPECIAL_CHARACTERS -> !password.any { !it.isLetterOrDigit() }
+                    }
+                }
+
+                if (missingTypes.isNotEmpty()) {
+                    val positions = (0 until password.length).shuffled(secureRandom)
+                    var posIndex = 0
+
+                    missingTypes.forEach { switch ->
+                        val sampleChar = when (switch) {
+                            SwitchType.UPPERCASE -> uppercasePool[secureRandom.nextInt(uppercasePool.size)]
+                            SwitchType.LOWERCASE -> lowercasePool[secureRandom.nextInt(lowercasePool.size)]
+                            SwitchType.NUMBERS -> numberPool[secureRandom.nextInt(numberPool.size)]
+                            SwitchType.SPECIAL_CHARACTERS -> specialPool[secureRandom.nextInt(specialPool.size)]
+                        }
+                        if (posIndex < positions.size) {
+                            password = password.replaceRange(positions[posIndex], positions[posIndex] + 1, sampleChar.toString())
+                            posIndex++
+                        }
+
+                    }
+                }
+
+                return password.take(length)
             }
             else -> {
 
@@ -193,5 +302,35 @@ class PasswordGenerator(
     }
 
     private fun <T> List<T>.random(random: SecureRandom): T = this[random.nextInt(size)]
+
+    private fun applyCasing(word: String, switches: Map<SwitchType, Boolean>, random: SecureRandom): String{
+        val upperEnabled = switches[SwitchType.UPPERCASE] == true
+        val lowerEnabled = switches[SwitchType.LOWERCASE] == true
+
+        return when {
+            upperEnabled && lowerEnabled -> {
+                when (random.nextInt(3)) {
+                    0 -> word.uppercase()
+                    1 -> word.lowercase()
+                    2 -> word.map { if (random.nextBoolean()) it.uppercaseChar() else it.lowercaseChar() }.joinToString("")
+                    else -> word
+                }
+            }
+            upperEnabled -> word.uppercase()
+            lowerEnabled -> word.lowercase()
+            else -> word
+        }
+    }
+
+
+    // Helper function to build character pool from enabled switches
+    private fun buildCharPool(switches: Map<SwitchType, Boolean>): List<Char> {
+        return buildList {
+            if (switches[SwitchType.LOWERCASE] == true) addAll('a'..'z')
+            if (switches[SwitchType.UPPERCASE] == true) addAll('A'..'Z')
+            if (switches[SwitchType.NUMBERS] == true) addAll('0'..'9')
+            if (switches[SwitchType.SPECIAL_CHARACTERS] == true) "!@#$%^&*()_+-=[]{}|;:,.<>?".toList()
+        }
+    }
 
 }
