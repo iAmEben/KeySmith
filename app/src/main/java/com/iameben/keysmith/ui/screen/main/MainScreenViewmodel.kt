@@ -84,7 +84,7 @@ class MainScreenViewmodel @Inject constructor(
         _sliderValue.value = value
         preferences.setSliderValue(value)
 
-        if (length == 4 && numSwitchesOn == 4) {
+        if (length <= 5 && numSwitchesOn == 4) {
             currentSwitches[SwitchType.UPPERCASE] = false
             _switchStates.value = currentSwitches
             preferences.setSwitchState(SwitchType.UPPERCASE, false)
