@@ -136,7 +136,7 @@ class PasswordGenerator(
 
             isUpperOrLowercase -> {
 
-                val requiredChars = mutableListOf<Char>()
+
                 val uppercasePool = ('A'..'Z').toList()
                 val lowercasePool = ('a'..'z').toList()
                 val numberPool = ('0'..'9').toList()
@@ -146,14 +146,14 @@ class PasswordGenerator(
                     length < 6 -> 1
                     length < 10 -> 2
                     else -> 3
-                }.coerceAtMost(dictionary.size) // Limit by dictionary size if needed
+                }.coerceAtMost(dictionary.size)
 
-                // Calculate maximum word length considering separators
+
                 val separatorsNeeded = maxOf(0, wordCount - 1)
                 val maxTotalWordLength = length - separatorsNeeded
                 val avgWordLength = if (wordCount > 0) maxTotalWordLength / wordCount else 0
 
-                // Select words from dictionary
+
                 val words = mutableListOf<String>()
                 var currentLength = 0
                 for (i in 0 until wordCount) {
@@ -167,12 +167,11 @@ class PasswordGenerator(
                 }
 
                 if (words.isEmpty()) {
-                    // Fallback to random characters if no words fit
                     val charPool = buildCharPool(switches)
                     return (1..length).map { charPool.random(secureRandom) }.joinToString("")
                 }
 
-                // Apply casing to words based on switches
+
                 val casedWords = words.map { word ->
                     val lowerEnabled = switches[SwitchType.LOWERCASE] == true
                     val upperEnabled = switches[SwitchType.UPPERCASE] == true
@@ -186,29 +185,28 @@ class PasswordGenerator(
                         }
                         lowerEnabled -> word.lowercase()
                         upperEnabled -> word.uppercase()
-                        else -> word // Default if no letter switches
+                        else -> word
                     }
                 }
 
-                // Generate separators
                 val charPool = buildCharPool(switches)
                 val separators = (1..separatorsNeeded).map { charPool.random(secureRandom).toString() }
 
-                // Build password with words and separators
+
                 val passwordBuilder = StringBuilder()
                 for (i in casedWords.indices) {
                     passwordBuilder.append(casedWords[i])
                     if (i < separators.size) passwordBuilder.append(separators[i])
                 }
 
-                // Fill remaining length with random characters
+
                 val remainingLength = length - passwordBuilder.length
                 if (remainingLength > 0) {
                     val randomChars = (1..remainingLength).map { charPool.random(secureRandom) }
                     passwordBuilder.append(randomChars.joinToString(""))
                 }
 
-                // Ensure all enabled switch types are represented
+
                 var password = passwordBuilder.toString()
                 val missingTypes = enabledSwitches.filter { switch ->
                     when (switch) {
