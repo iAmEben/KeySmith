@@ -21,23 +21,23 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "splash",
+        startDestination = Routes.SPLASH,
         modifier = modifier) {
 
-        composable("splash") {
+        composable(Routes.SPLASH) {
             val viewModel : SplashViewmodel = hiltViewModel()
             val isReady = viewModel.isReady.collectAsState()
             SplashScreen(
                 isReady = isReady.value,
                 onNavigateToMain = {
-                    navController.navigate("main") {
-                        popUpTo("splash") {inclusive = true}
+                    navController.navigate(Routes.MAIN) {
+                        popUpTo(Routes.SPLASH) {inclusive = true}
                     }
                 }
             )
 
         }
-        composable("main") {
+        composable(Routes.MAIN) {
 
             MainScreen(
                 themeViewmodel = themeViewmodel
