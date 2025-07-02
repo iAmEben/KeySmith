@@ -3,6 +3,7 @@ package com.iameben.keysmith.ui.screen.main
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,8 +43,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.R
+import com.iameben.keysmith.navigation.Routes
 import com.iameben.keysmith.ui.components.CustomSnackBarHost
 import com.iameben.keysmith.ui.components.LabeledSwitch
 import com.iameben.keysmith.ui.components.ModeButton
@@ -57,6 +60,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     themeViewmodel: ThemeViewmodel = hiltViewModel(),
     mainScreenViewmodel: MainScreenViewmodel = hiltViewModel()
@@ -128,12 +132,14 @@ fun MainScreen(
                     }
 
 
+
                     Icon(
                         painter = painterResource(R.drawable.ic_save),
                         contentDescription = "Saved Passwords",
                         modifier
                             .size(24.dp)
-                            .align(Alignment.CenterEnd),
+                            .align(Alignment.CenterEnd)
+                            .clickable(onClick = { navController.navigate(Routes.SETTINGS)}),
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
