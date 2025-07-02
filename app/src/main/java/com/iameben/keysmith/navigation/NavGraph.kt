@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.iameben.keysmith.ui.screen.main.MainScreen
 import com.iameben.keysmith.ui.screen.main.ThemeViewmodel
+import com.iameben.keysmith.ui.screen.settings.SettingsScreen
 import com.iameben.keysmith.ui.screen.splash.SplashScreen
 import com.iameben.keysmith.ui.screen.splash.SplashViewmodel
 
@@ -37,11 +38,17 @@ fun NavGraph(
             )
 
         }
+
         composable(Routes.MAIN) {
 
             MainScreen(
+                navController = navController,
                 themeViewmodel = themeViewmodel
             )
+        }
+
+        composable(Routes.SETTINGS) {
+            SettingsScreen(navController = navController)
         }
     }
 }
