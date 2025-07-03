@@ -61,7 +61,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    modifier: Modifier = Modifier,
     themeViewmodel: ThemeViewmodel = hiltViewModel(),
     mainScreenViewmodel: MainScreenViewmodel = hiltViewModel()
 ) {
@@ -88,11 +87,11 @@ fun MainScreen(
 
     Scaffold(
         snackbarHost = { CustomSnackBarHost(hostState = snackBarHostState) },
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
     ) { paddingValues ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)
@@ -101,7 +100,7 @@ fun MainScreen(
         ) {
 
             Row(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(30.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -109,11 +108,11 @@ fun MainScreen(
 
 
 
-                Box(modifier.fillMaxWidth()) {
+                Box(Modifier.fillMaxWidth()) {
 
                     IconButton(
                         onClick = {themeViewmodel.toggleTheme()},
-                        modifier = modifier
+                        modifier = Modifier
                             .wrapContentSize()
                             .padding(top = 18.dp)
                             .align(Alignment.CenterStart)
@@ -136,7 +135,7 @@ fun MainScreen(
                     Icon(
                         painter = painterResource(R.drawable.ic_save),
                         contentDescription = "Saved Passwords",
-                        modifier
+                        Modifier
                             .size(24.dp)
                             .align(Alignment.CenterEnd)
                             .clickable(onClick = { navController.navigate(Routes.SETTINGS)}),
@@ -192,7 +191,7 @@ fun MainScreen(
 
                 Text(
                     text = "$sliderValue",
-                    modifier = modifier
+                    modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.bodyLarge
@@ -259,7 +258,7 @@ fun MainScreen(
 
             Button(
                 shape = RoundedCornerShape(16.dp),
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
                 onClick = {
@@ -267,7 +266,7 @@ fun MainScreen(
                 }
             ) {
                 Text(
-                    modifier = modifier
+                    modifier = Modifier
                         .padding(8.dp),
                     text = "COPY",
                     fontSize = 16.sp,
