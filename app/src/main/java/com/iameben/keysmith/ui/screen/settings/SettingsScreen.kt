@@ -19,19 +19,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.iameben.keysmith.R
 import com.iameben.keysmith.navigation.Routes
 import com.iameben.keysmith.ui.components.SettingItemRow
+import com.iameben.keysmith.util.goBack
+
 
 @Composable
-//@Preview(showBackground = true)
 fun SettingsScreen(
     navController: NavHostController,
     settingsViewmodel: SettingsViewmodel = hiltViewModel()
@@ -51,7 +50,7 @@ fun SettingsScreen(
         ) {
 
             IconButton(
-                onClick = { },
+                onClick = { goBack(navController) },
                 modifier = Modifier
                     .wrapContentSize()
                     .padding(top = 18.dp)
@@ -60,7 +59,7 @@ fun SettingsScreen(
                 Icon(
                     painter = painterResource(R.drawable.ic_back),
                     contentDescription = "back",
-                    tint = MaterialTheme.colorScheme.onBackground,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .size(18.dp)
                 )
