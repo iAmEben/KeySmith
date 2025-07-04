@@ -8,18 +8,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iameben.keysmith.data.local.dao.PasswordDao
+import com.iameben.keysmith.data.local.entity.PasswordEntity
 import com.iameben.keysmith.data.preferences.AppPreferences
 import com.iameben.keysmith.ui.components.enums.ModeSelector
 import com.iameben.keysmith.ui.components.enums.SwitchType
 import com.iameben.keysmith.util.PasswordGenerator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewmodel @Inject constructor(
     private val passwordGenerator: PasswordGenerator,
-    private val preferences: AppPreferences
+    private val preferences: AppPreferences,
+    private val passwordDao: PasswordDao
 ) : ViewModel() {
     private val _switchStates = MutableStateFlow(preferences.getAllSwitchStates())
     val switchStates = _switchStates.asStateFlow()
@@ -38,6 +42,9 @@ class MainScreenViewmodel @Inject constructor(
 
     private val _snackBarHostState = MutableStateFlow(SnackbarHostState())
     val snackBarHostState = _snackBarHostState.asStateFlow()
+
+    private val _passwords = MutableStateFlow<List<PasswordEntity>>(emptyList())
+    val passwords: StateFlow<List<PasswordEntity>> = _passwords.asStateFlow()
 
     init {
 
@@ -158,6 +165,18 @@ class MainScreenViewmodel @Inject constructor(
 
         viewModelScope.launch {
             _snackBarHostState.value.showSnackbar("Password Copied!")
+        }
+    }
+
+    fun savePassword() {
+        viewModelScope.launch {
+            val currentPasswords = _passwords.value
+            val newTitle = "Untitled ${currentPasswords.size + 1}"
+            val passwordEntity = PasswordEntity(
+                title = newTitle,
+                password = _generatedPassword.value
+            )
+            passwordDao.insert(passwordEntity)
         }
     }
 
