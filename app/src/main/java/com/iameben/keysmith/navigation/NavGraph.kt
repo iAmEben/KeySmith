@@ -7,6 +7,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.iameben.keysmith.ui.about.AboutScreen
+import com.iameben.keysmith.ui.passwords.PasswordScreen
 import com.iameben.keysmith.ui.screen.main.MainScreen
 import com.iameben.keysmith.ui.screen.main.ThemeViewmodel
 import com.iameben.keysmith.ui.screen.settings.SettingsScreen
@@ -49,6 +51,14 @@ fun NavGraph(
 
         composable(Routes.SETTINGS) {
             SettingsScreen(navController = navController)
+        }
+
+        composable(Routes.PASSWORDS) {
+            PasswordScreen(navController = navController)
+        }
+
+        composable(Routes.ABOUT) {
+            AboutScreen(navController = navController)
         }
     }
 }

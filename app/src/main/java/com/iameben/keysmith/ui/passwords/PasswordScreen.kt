@@ -1,8 +1,11 @@
 package com.iameben.keysmith.ui.passwords
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 
 @Composable
-fun PasswordScreen() {
+fun PasswordScreen(
+    navController: NavHostController
+) {
 
 }
