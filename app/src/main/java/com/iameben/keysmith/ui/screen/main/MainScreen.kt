@@ -263,6 +263,7 @@ fun MainScreen(
                     .padding(8.dp),
                 onClick = {
                     mainScreenViewmodel.copyToClipboard(context = context, text = generatedPassword)
+                    mainScreenViewmodel.savePassword()
                 }
             ) {
                 Text(
