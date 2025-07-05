@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.iameben.keysmith.R
 import com.iameben.keysmith.data.local.entity.PasswordEntity
 import com.iameben.keysmith.ui.screen.main.MainScreenViewmodel
+import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.util.goBack
 
 @Composable
@@ -37,10 +38,9 @@ fun PasswordItemRow(
     password: PasswordEntity,
     onUpdateTitle: (String) -> Unit,
     onDelete: () -> Unit,
-    mainScreenViewmodel: MainScreenViewmodel = hiltViewModel(),
-    context: Context
+    onClick: () -> Unit,
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.onBackground
+    val backgroundColor = MaterialTheme.colorScheme.onPrimary
     var title by remember { mutableStateOf(password.title) }
 
     Box(
@@ -97,7 +97,7 @@ fun PasswordItemRow(
                 }
 
                 IconButton(
-                    onClick = { mainScreenViewmodel.copyToClipboard(context, text = password.password) },
+                    onClick = { onClick() },
                     modifier = Modifier
                         .wrapContentSize()
                         .clip(CircleShape)
@@ -113,5 +113,8 @@ fun PasswordItemRow(
                 }
             }
         }
+
     }
+
+    Space()
 }
