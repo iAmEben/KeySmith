@@ -17,32 +17,49 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.iameben.keysmith.R
 import com.iameben.keysmith.navigation.Routes
+import com.iameben.keysmith.ui.components.CustomSnackBarHost
+import com.iameben.keysmith.ui.components.PasswordItemRow
 import com.iameben.keysmith.ui.components.SettingItemRow
+import com.iameben.keysmith.ui.screen.main.MainScreenViewmodel
 import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.util.goBack
 
 @Composable
 fun PasswordScreen(
     navController: NavHostController,
-    viewmodel: PasswordViewmodel = hiltViewModel()
+    viewmodel: PasswordViewmodel = hiltViewModel(),
+    mainScreenViewmodel: MainScreenViewmodel = hiltViewModel()
 ) {
 
     val passwords = viewmodel.passwords.collectAsState().value
+    val snackBarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
+    LaunchedEffect(snackBarHostState) {
+        if (snackBarHostState != mainScreenViewmodel.snackBarHostState.value){
+            mainScreenViewmodel.setSnackBarHotState(snackBarHostState)
+        }
+
+    }
 
     Scaffold(
+        snackbarHost = { CustomSnackBarHost(hostState = snackBarHostState) },
         modifier = Modifier
             .fillMaxSize()
     ) { paddingValues ->
@@ -111,7 +128,23 @@ fun PasswordScreen(
                         )
                     }
                 } else {
-
+                    items(passwords, key = { it.id }) { password ->
+                        PasswordItemRow(
+                            password = password,
+                            onUpdateTitle = { newTitle ->
+                                viewmodel.updatePasswordTitle(password, newTitle)
+                            },
+                            onDelete = {
+                                viewmodel.deletePassword(password)
+                            },
+                            onClick = {
+                                mainScreenViewmodel.copyToClipboard(
+                                    context,
+                                    text = password.password
+                                )
+                            }
+                        )
+                    }
                 }
 
             }
