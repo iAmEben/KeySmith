@@ -1,6 +1,5 @@
 package com.iameben.keysmith.ui.components
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,12 +27,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.iameben.keysmith.R
 import com.iameben.keysmith.data.local.entity.PasswordEntity
-import com.iameben.keysmith.ui.screen.main.MainScreenViewmodel
 import com.iameben.keysmith.util.Space
-import com.iameben.keysmith.util.goBack
 
 @Composable
 fun PasswordItemRow(
