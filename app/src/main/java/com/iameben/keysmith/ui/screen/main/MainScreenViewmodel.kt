@@ -52,6 +52,12 @@ class MainScreenViewmodel @Inject constructor(
             generatedInitialPassword(_snackBarHostState.value)
         }
 
+        viewModelScope.launch {
+            passwordDao.getAllPasswords().collect { passwords ->
+                _passwords.value = passwords
+            }
+        }
+
     }
 
 
