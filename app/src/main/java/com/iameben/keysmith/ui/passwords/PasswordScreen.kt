@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +40,7 @@ import com.iameben.keysmith.ui.components.SettingItemRow
 import com.iameben.keysmith.ui.screen.main.MainScreenViewmodel
 import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.util.goBack
+import kotlinx.coroutines.launch
 
 @Composable
 fun PasswordScreen(
@@ -49,6 +51,7 @@ fun PasswordScreen(
 
     val passwords = viewmodel.passwords.collectAsState().value
     val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
     LaunchedEffect(snackBarHostState) {
@@ -135,7 +138,10 @@ fun PasswordScreen(
                                 viewmodel.updatePasswordTitle(password, newTitle)
                             },
                             onDelete = {
-                                viewmodel.deletePassword(password)
+                                scope.launch {
+                                    viewmodel.deletePassword(password)
+                                }
+
                             },
                             onClick = {
                                 mainScreenViewmodel.copyToClipboard(
