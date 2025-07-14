@@ -83,7 +83,7 @@ fun PasswordItemRow(
                 modifier = Modifier.wrapContentSize().padding(8.dp)
             ) {
                 IconButton(
-                    onClick = { onDelete },
+                    onClick = { onDelete() },
                     modifier = Modifier
                         .wrapContentSize()
                         .clip(CircleShape)
