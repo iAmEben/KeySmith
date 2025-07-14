@@ -19,6 +19,6 @@ interface PasswordDao {
     @Delete
     suspend fun delete(password: PasswordEntity)
 
-    @Query("SELECT * FROM passwords ORDER BY id ASC")
+    @Query("SELECT * FROM passwords ORDER BY id DESC")
     fun getAllPasswords(): Flow<List<PasswordEntity>>
 }
