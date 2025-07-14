@@ -13,13 +13,19 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -48,6 +54,7 @@ import com.iameben.keysmith.util.goBack
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordScreen(
     navController: NavHostController,
@@ -55,9 +62,11 @@ fun PasswordScreen(
     mainScreenViewmodel: MainScreenViewmodel = hiltViewModel()
 ) {
 
+    var showDialog by remember { mutableStateOf(false) }
     val passwords = viewmodel.passwords.collectAsState().value
     var passwordToDelete by remember { mutableStateOf<PasswordEntity?>(null)}
     var dismissStateToReset by remember { mutableStateOf<SwipeToDismissBoxState?>(null) }
+    var currentlySwipedState by remember { mutableStateOf<SwipeToDismissBoxState?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -67,6 +76,79 @@ fun PasswordScreen(
             mainScreenViewmodel.setSnackBarHotState(snackBarHostState)
         }
 
+    }
+
+    if (showDialog && passwordToDelete != null) {
+
+        BasicAlertDialog(
+            onDismissRequest = {
+                showDialog = false
+                passwordToDelete = null
+                scope.launch {
+                    currentlySwipedState?.reset()
+                    currentlySwipedState = null
+                }
+            },
+            modifier = Modifier
+                .background(
+                    color = AlertDialogDefaults.containerColor,
+                    shape = AlertDialogDefaults.shape
+                )
+        ) {
+            Surface(
+                color = AlertDialogDefaults.containerColor,
+                tonalElevation = AlertDialogDefaults.TonalElevation,
+                shape = AlertDialogDefaults.shape
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = "Confirm Deletion",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = AlertDialogDefaults.titleContentColor
+                    )
+                    Text(
+                        text = "Are you sure you want to delete '${passwordToDelete!!.title}'? This cannot be undone",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = AlertDialogDefaults.textContentColor
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(
+                            onClick = {
+                                showDialog = false
+                                passwordToDelete = null
+                                scope.launch {
+                                    currentlySwipedState?.reset()
+                                    currentlySwipedState = null
+                                }
+                            }
+                        ) { Text("Cancel") }
+
+                        TextButton(
+                            onClick = {
+                                viewmodel.deletePassword(passwordToDelete!!)
+                                showDialog = false
+                                passwordToDelete = null
+                                scope.launch {
+                                    currentlySwipedState?.reset()
+                                    currentlySwipedState = null
+                                }
+                            }
+                        ) { Text("Delete")}
+                    }
+
+                }
+            }
+        }
     }
 
     Scaffold(
@@ -148,6 +230,7 @@ fun PasswordScreen(
                             onSwipeToDelete = {
                                 passwordToDelete = password
                                 dismissStateToReset = null
+                                showDialog = true
                             },
                             onClick = {
                                 mainScreenViewmodel.copyToClipboard(
@@ -156,8 +239,12 @@ fun PasswordScreen(
                                 )
                             },
                             onIconClick = { state ->
+                                scope.launch {
+                                    currentlySwipedState?.reset()
+                                    currentlySwipedState = null
+                                }
                                 passwordToDelete = password
-                                dismissStateToReset = state
+                                showDialog = true
                                 scope.launch { state.reset() }
 
                             }
