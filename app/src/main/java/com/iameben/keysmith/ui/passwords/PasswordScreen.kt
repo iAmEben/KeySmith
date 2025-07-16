@@ -201,7 +201,7 @@ fun PasswordScreen(
                 ) {
                     Text(
                         text = "Your Passwords",
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }

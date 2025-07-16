@@ -85,7 +85,7 @@ fun SettingsScreen(
                 ) {
                     Text(
                         text = "Settings",
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }
