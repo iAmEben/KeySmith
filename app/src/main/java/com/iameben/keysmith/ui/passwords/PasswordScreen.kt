@@ -1,9 +1,11 @@
 package com.iameben.keysmith.ui.passwords
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,12 +26,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,8 +42,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -67,6 +74,8 @@ fun PasswordScreen(
     var passwordToDelete by remember { mutableStateOf<PasswordEntity?>(null)}
     var dismissStateToReset by remember { mutableStateOf<SwipeToDismissBoxState?>(null) }
     var currentlySwipedState by remember { mutableStateOf<SwipeToDismissBoxState?>(null) }
+    var currentlySwipedId by remember { mutableStateOf<Int?>(null) }
+    val dismissStates = remember { mutableStateMapOf<Int, SwipeToDismissBoxState>() }
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -152,9 +161,7 @@ fun PasswordScreen(
     }
 
     Scaffold(
-        snackbarHost = { CustomSnackBarHost(hostState = snackBarHostState) },
-        modifier = Modifier
-            .fillMaxSize()
+        snackbarHost = { CustomSnackBarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -166,7 +173,7 @@ fun PasswordScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 18.dp),
+                    .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
@@ -188,7 +195,8 @@ fun PasswordScreen(
 
                 Box(
                     modifier = Modifier
-                        .weight(1f),
+                        .fillMaxWidth(),
+//                        .padding(vertical = 16.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -202,36 +210,53 @@ fun PasswordScreen(
             }
 
 
-            Space(size = 32.dp)
 
             LazyColumn(
                 modifier = Modifier
-                    .padding(top = 32.dp)
-                    .wrapContentSize()
-                    .background(MaterialTheme.colorScheme.background),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                userScrollEnabled = true,
+                contentPadding = PaddingValues(vertical = 16.dp, horizontal = 8.dp)
             ) {
                 if (passwords.isEmpty()) {
                     item {
                         Text(
                             text = "No passwords Saved",
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(16.dp)
                         )
                     }
                 } else {
                     items(passwords, key = { it.id }) { password ->
+
+                        val dismissState = dismissStates.getOrPut(password.id) {
+                            rememberSwipeToDismissBoxState(
+                                confirmValueChange = { dismissValue ->
+                                    if (dismissValue == SwipeToDismissBoxValue.StartToEnd) {
+                                        scope.launch {
+                                            if (currentlySwipedId != password.id) {
+                                                currentlySwipedId?.let { prevId ->
+                                                    dismissStates[prevId]?.reset()
+                                                }
+                                                currentlySwipedId = password.id
+                                            }
+                                        }
+                                        false
+                                    }else {
+                                        true
+                                    }
+                                }
+                            )
+                        }
                         PasswordItemRow(
                             password = password,
                             onUpdateTitle = { newTitle ->
                                 viewmodel.updatePasswordTitle(password, newTitle)
                             },
-                            onSwipeToDelete = {
-                                passwordToDelete = password
-                                dismissStateToReset = null
-                                showDialog = true
-                            },
+                            dismissState = dismissState,
                             onClick = {
                                 mainScreenViewmodel.copyToClipboard(
                                     context,
