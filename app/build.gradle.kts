@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.kotlin.coroutines)
     implementation (libs.kotlin.android)
+    implementation (libs.material.icons)
 
 
 
