@@ -86,9 +86,7 @@ fun MainScreen(
     }
 
     Scaffold(
-        snackbarHost = { CustomSnackBarHost(hostState = snackBarHostState) },
-        modifier = Modifier
-            .fillMaxSize()
+        snackbarHost = { CustomSnackBarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
