@@ -101,7 +101,7 @@ fun SettingsScreen(
                     .padding(top = 32.dp)
                     .wrapContentSize()
                     .background(MaterialTheme.colorScheme.background),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(items) { item ->
