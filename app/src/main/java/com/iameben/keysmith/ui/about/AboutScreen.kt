@@ -22,15 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.iameben.keysmith.R
 import com.iameben.keysmith.ui.theme.Manrope
-import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.util.goBack
 
 @Composable
