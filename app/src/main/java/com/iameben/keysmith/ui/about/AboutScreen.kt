@@ -22,10 +22,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.iameben.keysmith.R
+import com.iameben.keysmith.ui.theme.Manrope
 import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.util.goBack
 
@@ -86,7 +88,8 @@ fun AboutScreen(
             Text(
                 modifier = Modifier.weight(1f),
                 text = stringResource(id = R.string.about_description),
-                fontFamily = FontFamily(Font(R.font.manrope_variable_font)),
+                fontFamily = Manrope,
+                fontWeight = FontWeight.SemiBold,
                 lineHeight = 22.sp,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground
