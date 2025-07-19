@@ -83,4 +83,8 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     annotationProcessor(libs.room.compiler)
+
+    //Firebase
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 }
