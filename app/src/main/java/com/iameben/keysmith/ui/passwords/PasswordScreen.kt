@@ -1,7 +1,6 @@
 package com.iameben.keysmith.ui.passwords
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,14 +48,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.iameben.keysmith.R
 import com.iameben.keysmith.data.local.entity.PasswordEntity
-import com.iameben.keysmith.navigation.Routes
 import com.iameben.keysmith.ui.components.CustomSnackBarHost
 import com.iameben.keysmith.ui.components.PasswordItemRow
-import com.iameben.keysmith.ui.components.SettingItemRow
 import com.iameben.keysmith.ui.screen.main.MainScreenViewmodel
-import com.iameben.keysmith.util.Space
 import com.iameben.keysmith.util.goBack
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
