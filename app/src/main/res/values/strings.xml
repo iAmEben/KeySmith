@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">KeySmith</string>
+    <string name="about_description">
+    KeySmith is your friendly, easy-to-use password generator—designed with care to help you create strong, secure, and unique passwords in just a few taps.\n\n
+    In today\’s digital world, security is more important than ever. That\’s why KeySmith is here to make password creation simple, stress-free, and safe—without the technical headache.\n\n
+    Whether you\'re setting up a new account or upgrading an old password, KeySmith gives you the flexibility to create passwords that fit your needs, fast and securely.\n\n
+    ✨ Lots of premium features are on the way, and we\'re building them with you in mind!\n\n
+    Got a suggestion or found a bug? Feel free to reach out to the developer—we\’d love to hear from you.
+</string>
 </resources>
