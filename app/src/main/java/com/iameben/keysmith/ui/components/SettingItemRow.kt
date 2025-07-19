@@ -46,6 +46,6 @@ fun SettingItemRow(item: SettingsItem, onItemClick: () -> Unit) {
         }
     }
 
-
+    Space()
 
 }
