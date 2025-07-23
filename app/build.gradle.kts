@@ -85,9 +85,9 @@ dependencies {
     ksp(libs.room.compiler)
     annotationProcessor(libs.room.compiler)
 
-    //Firebase
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.google.firebase.analytics)
+    //Firebase -- might be used in the future.
+//    implementation(libs.firebase.analytics)
+//    implementation(libs.firebase.crashlytics)
+//    implementation(platform(libs.firebase.bom))
+//    implementation(libs.google.firebase.analytics)
 }
